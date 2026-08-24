@@ -1,0 +1,11 @@
+{
+  "name": "arstore-tools-v2",
+  "version": "2.0.0-review9",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "devDependencies": {
+    "netlify-cli": "^23.11.0"
+  }
+}

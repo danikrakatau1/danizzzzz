@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/shopee-research"
+  to = "/.netlify/functions/shopee-research"
+  status = 200
+
+# SPA fallback harus berada setelah route API.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

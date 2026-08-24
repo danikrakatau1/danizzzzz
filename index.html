@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080b12" />
+  <title>ARSTORE Tools V2</title>
+  <base href="/" />
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo-orbit" aria-label="Logo AR STORE">
+          <img src="assets/arstore-emblem-transparent.png" alt="Logo AR STORE" class="brand-logo-animated" />
+        </div>
+        <div class="brand-copy">
+          <strong>AR STORE</strong>
+          <span>Seller Command Center</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Navigasi utama">
+        <button class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">⌂</span><span>Dashboard</span>
+        </button>
+
+        <div class="nav-section-title">WORKFLOW</div>
+        <button class="nav-item" data-page="research"><span class="nav-step">01</span><span>Produk Trending</span></button>
+        <button class="nav-item" data-page="fee"><span class="nav-step">02</span><span>Fee Engine</span></button>
+        <button class="nav-item" data-page="profit"><span class="nav-step">03</span><span>Kalkulator Profit</span></button>
+        <button class="nav-item" data-page="pricing"><span class="nav-step">04</span><span>Harga Ideal</span></button>
+        <button class="nav-item" data-page="ads"><span class="nav-step">05</span><span>Simulator Iklan</span></button>
+        <button class="nav-item" data-page="decision"><span class="nav-step">06</span><span>Decision Center</span></button>
+
+        <div class="nav-section-title">DATA & SYSTEM</div>
+        <button class="nav-item" data-page="database"><span class="nav-icon">▦</span><span>Database Fee</span></button>
+        <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>Pengaturan</span></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="workspace-avatar">AR</div>
+        <div class="workspace-copy">
+          <strong>AR STORE</strong>
+          <span>Seller Workspace</span>
+        </div>
+        <span class="online-dot" title="Database siap"></span>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Buka menu">☰</button>
+          <div>
+            <span class="eyebrow">ARSTORE TOOLS V2</span>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <span class="db-pill"><span class="online-dot"></span> Database siap</span>
+          <div class="mobile-header-brand" aria-label="AR STORE">
+            <img src="assets/arstore-emblem-transparent.png" alt="AR STORE" />
+          </div>
+          <button class="icon-btn" data-page="settings" aria-label="Pengaturan">⚙</button>
+          <button class="ghost-btn" id="resetWorkspaceBtn">Reset</button>
+        </div>
+      </header>
+
+      <section class="page active" id="page-dashboard" data-title="Dashboard">
+        <div class="dashboard-grid">
+          <section class="hero-panel panel-span-8">
+            <div class="hero-glow hero-glow-a"></div>
+            <div class="hero-glow hero-glow-b"></div>
+            <div class="hero-content">
+              <span class="eyebrow accent">SELLER COMMAND CENTER</span>
+              <h2>Kerja lebih cepat.<br><span>Ambil keputusan lebih tajam.</span></h2>
+              <p>Analisis produk Shopee, hitung biaya, profit, harga, iklan, lalu rangkum semuanya dalam satu alur kerja.</p>
+              <div class="hero-actions">
+                <button class="primary-btn" data-go="research">Mulai Analisis <span>→</span></button>
+                <button class="secondary-btn" data-go="database">Lihat Database Fee</button>
+              </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <div class="visual-card vc-main">
+                <span>MARKET SIGNAL</span>
+                <strong>Trending</strong>
+                <div class="fake-chart"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <div class="visual-card vc-small"><span>ROAS</span><strong>—</strong></div>
+              <div class="visual-orb">↗</div>
+            </div>
+          </section>
+
+          <section class="next-action panel-span-4">
+            <div class="panel-topline">
+              <span class="eyebrow">NEXT ACTION</span>
+              <span class="step-chip">01</span>
+            </div>
+            <div class="next-icon">⌕</div>
+            <h3>Analisis Produk Trending di Shopee</h3>
+            <p>Mulai dari keyword produk. Sistem akan membaca performa penjualan, rating, ulasan, harga, dan peluang pasar.</p>
+            <button class="wide-action" data-go="research">Mulai Step 01 <span>→</span></button>
+          </section>
+
+          <section class="active-analysis panel-span-7">
+            <div class="panel-topline">
+              <div>
+                <span class="eyebrow">ANALISIS AKTIF</span>
+                <h3>Belum ada analisis</h3>
+              </div>
+              <span class="status-badge neutral">Belum dimulai</span>
+            </div>
+            <div class="empty-state-line">
+              <div class="empty-state-icon">⌁</div>
+              <div>
+                <strong>Belum ada keyword yang dianalisis</strong>
+                <p>Mulai Step 01 untuk membangun konteks pasar yang akan dipakai tool berikutnya.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="progress-panel panel-span-5">
+            <div class="panel-topline">
+              <div>
+                <span class="eyebrow">WORKFLOW PROGRESS</span>
+                <h3>0 dari 6 selesai</h3>
+              </div>
+              <span class="progress-percent">0%</span>
+            </div>
+            <div class="progress-track"><span style="width:0%"></span></div>
+            <div class="progress-dots">
+              <button data-go="research"><span>01</span><small>Trend</small></button>
+              <button data-go="fee"><span>02</span><small>Fee</small></button>
+              <button data-go="profit"><span>03</span><small>Profit</small></button>
+              <button data-go="pricing"><span>04</span><small>Harga</small></button>
+              <button data-go="ads"><span>05</span><small>Iklan</small></button>
+              <button data-go="decision"><span>06</span><small>Decision</small></button>
+            </div>
+          </section>
+        </div>
+
+        <div class="section-title-row">
+          <div>
+            <span class="eyebrow">WORKFLOW</span>
+            <h3>Tool yang kamu butuhkan</h3>
+          </div>
+          <span class="section-note">Ikuti 01 → 06 untuk hasil paling lengkap</span>
+        </div>
+
+        <section class="bento-tools">
+          <article class="tool-card featured purple" data-go="research" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">⌕</span><span class="tool-number">01</span></div>
+            <h3>Analisis Produk Trending</h3>
+            <p>Cari produk Shopee dari keyword lalu nilai penjualan, rating, ulasan, harga, dan market opportunity.</p>
+            <div class="tool-footer"><span>Mulai analisis</span><span>→</span></div>
+          </article>
+
+          <article class="tool-card blue" data-go="fee" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">%</span><span class="tool-number">02</span></div>
+            <h3>Fee Engine</h3>
+            <p>Hitung biaya marketplace sesuai tipe seller, kategori, dan program Shopee.</p>
+            <div class="tool-footer"><span>Hitung fee</span><span>→</span></div>
+          </article>
+
+          <article class="tool-card orange" data-go="profit" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">Rp</span><span class="tool-number">03</span></div>
+            <h3>Kalkulator Profit</h3>
+            <p>Lihat modal, biaya, profit bersih, dan margin produk secara cepat.</p>
+            <div class="tool-footer"><span>Hitung profit</span><span>→</span></div>
+          </article>
+
+          <article class="tool-card green" data-go="pricing" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">↗</span><span class="tool-number">04</span></div>
+            <h3>Harga Ideal</h3>
+            <p>Cari harga minimum, aman, dan ideal dengan mode otomatis atau manual.</p>
+            <div class="tool-footer"><span>Cari harga</span><span>→</span></div>
+          </article>
+
+          <article class="tool-card pink wide" data-go="ads" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">ROAS</span><span class="tool-number">05</span></div>
+            <h3>Simulator Iklan</h3>
+            <p>Simulasikan budget, ROAS BEP, target ROAS, CPA maksimal, dan profit setelah iklan.</p>
+            <div class="tool-footer"><span>Simulasikan</span><span>→</span></div>
+          </article>
+
+          <article class="tool-card cyan wide" data-go="decision" tabindex="0">
+            <div class="tool-head"><span class="tool-icon">✓</span><span class="tool-number">06</span></div>
+            <h3>Decision Center</h3>
+            <p>Gabungkan seluruh hasil menjadi keputusan: layak dites, perlu revisi, atau tidak layak.</p>
+            <div class="tool-footer"><span>Lihat keputusan</span><span>→</span></div>
+          </article>
+        </section>
+
+        <section class="snapshot-panel">
+          <div class="snapshot-heading">
+            <div>
+              <span class="eyebrow">LIVE WORKSPACE SNAPSHOT</span>
+              <h3>Ringkasan analisis</h3>
+            </div>
+            <span class="status-badge neutral">Menunggu data</span>
+          </div>
+          <div class="snapshot-grid">
+            <div><span>Profit Bersih</span><strong>—</strong><small>Belum dihitung</small></div>
+            <div><span>Margin Bersih</span><strong>—</strong><small>Belum dihitung</small></div>
+            <div><span>ROAS BEP</span><strong>—</strong><small>Belum dihitung</small></div>
+            <div><span>Harga Ideal</span><strong>—</strong><small>Belum dihitung</small></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-research" data-title="Analisis Produk Trending di Shopee">
+        <div class="research-page">
+          <div class="research-head">
+            <div>
+              <span class="step-badge">STEP 01</span>
+              <h2>Analisis Produk Trending di Shopee</h2>
+              <p>Ketik keyword produk. ARSTORE akan membaca data marketplace yang dikembalikan provider, membandingkan performa produk, lalu menyusun ranking dan market insight.</p>
+            </div>
+            <div class="source-badge"><span class="online-dot"></span><div><strong>Shopee Indonesia</strong><small id="researchFreshness">Menunggu pencarian</small></div></div>
+          </div>
+
+          <form class="research-search-panel" id="researchForm">
+            <div class="research-search-main">
+              <label for="researchKeyword">Keyword produk</label>
+              <div class="research-search-row">
+                <div class="research-input-wrap"><span>⌕</span><input id="researchKeyword" name="keyword" type="search" autocomplete="off" maxlength="120" placeholder="Contoh: celana wanita cargo" required /><button type="button" class="keyword-clear" id="clearKeywordBtn" aria-label="Hapus keyword" hidden>×</button></div>
+                <button class="research-submit" id="researchSubmit" type="submit"><span>Analisis Sekarang</span><b>→</b></button>
+              </div>
+              <div class="research-search-meta"><div class="search-meta-left"><span class="analysis-mode-chip">✦ Mode Analisis: <b>Trending</b></span><span class="history-badge" id="keywordHistoryBadge" hidden>Pernah dianalisis</span></div><span class="source-mini" id="searchSourceFreshness">Shopee Indonesia · siap dianalisis</span></div><div class="smart-suggestions" id="smartSuggestions" hidden><span>Saran:</span><div id="smartSuggestionList"></div></div>
+              <div class="research-examples"><span>Contoh:</span><button type="button" data-example="celana wanita cargo">celana wanita cargo</button><button type="button" data-example="celana jeans wanita">celana jeans wanita</button><button type="button" data-example="celana kulot wanita">celana kulot wanita</button></div>
+              <div class="quick-filter-row" aria-label="Filter cepat"><span>Filter cepat:</span><button type="button" data-quick="rating47">★ Rating ≥ 4.7</button><button type="button" data-quick="sold1000">🔥 Terjual ≥ 1 rb</button><button type="button" data-quick="under100k">💸 Harga &lt; 100 rb</button><button type="button" data-quick="top20">Top 20</button></div>
+              <div class="recent-searches" id="recentSearches" hidden><span>Terakhir dicari:</span><div id="recentSearchList"></div></div>
+              <p class="ranking-helper">Default ranking menggabungkan penjualan 30 hari, kekuatan rating/ulasan, omzet, dan posisi harga pasar.</p>
+            </div>
+
+            <details class="research-filter-box" id="advancedFilters">
+              <summary>Filter & urutan <span>⌄</span></summary>
+              <div class="research-filter-grid">
+                <label>Harga minimum<input id="filterPriceMin" inputmode="numeric" type="number" min="0" step="1000" placeholder="0" /></label>
+                <label>Harga maksimum<input id="filterPriceMax" inputmode="numeric" type="number" min="0" step="1000" placeholder="Bebas" /></label>
+                <label>Minimal terjual 30D<input id="filterSoldMin" inputmode="numeric" type="number" min="0" step="100" placeholder="0" /></label>
+                <label>Rating minimum<select id="filterRatingMin"><option value="">Semua</option><option value="4">4.0+</option><option value="4.5">4.5+</option><option value="4.7">4.7+</option><option value="4.8">4.8+</option></select></label>
+                <label>Jumlah hasil<select id="filterPageSize"><option value="10">10 produk</option><option value="20" selected>20 produk</option><option value="30">30 produk</option></select></label>
+                <label class="filter-wide">Urutkan berdasarkan<select id="filterSort"><option value="trending" selected>Trending Score ARSTORE</option><option value="sold">Penjualan 30 hari</option><option value="historicalSold">Total terjual</option><option value="ratings">Ulasan / rating terbanyak</option><option value="rating">Rating tertinggi</option><option value="payment">Omzet 30 hari</option></select></label>
+              </div>
+            </details>
+          </form>
+
+          <div class="research-message" id="researchMessage" role="status" aria-live="polite"></div>
+
+          <section class="research-loading" id="researchLoading" hidden aria-live="polite">
+            <div class="analysis-scan-line" aria-hidden="true"></div>
+            <div class="scan-orb"><span></span></div>
+            <div class="loading-copy"><strong>Sedang menganalisis Shopee...</strong><p id="researchLoadingText">Menghubungkan ke data Shopee.</p></div>
+            <div class="scan-steps"><span class="active">Mencari produk</span><span>Membaca performa</span><span>Menghitung score</span><span>Menyusun rekomendasi</span></div>
+            <div class="research-skeletons" aria-hidden="true">
+              <article><i></i><div><b></b><b></b><b></b></div><em></em></article>
+              <article><i></i><div><b></b><b></b><b></b></div><em></em></article>
+              <article><i></i><div><b></b><b></b><b></b></div><em></em></article>
+            </div>
+          </section>
+
+          <div id="researchResults" hidden>
+            <section class="market-overview-panel">
+              <div class="market-overview-head"><div><span class="eyebrow">MARKET OVERVIEW</span><h3 id="marketKeyword">—</h3></div><button type="button" class="mini-action" id="reanalyzeBtn">↻ Analisis Ulang</button></div>
+              <div class="market-kpis">
+                <article class="kpi-products"><span>Produk dianalisis</span><strong id="marketProductCount">—</strong><small>listing valid</small></article>
+                <article class="kpi-price"><span>Median harga</span><strong id="marketMedianPrice">—</strong><small>harga tengah pasar</small></article>
+                <article class="kpi-sales"><span>Penjualan 30D</span><strong id="marketSold30">—</strong><small>total terpantau</small></article>
+                <article class="kpi-rating"><span>Median rating</span><strong id="marketMedianRating">—</strong><small>kualitas listing</small></article>
+              </div>
+              <div class="market-score-row">
+                <article class="score-card"><div><span>Competition Score</span><strong id="competitionScore">—</strong></div><div class="score-meter"><i id="competitionMeter"></i></div><small id="competitionLabel">Menunggu data</small></article>
+                <article class="score-card opportunity"><div><span>Market Opportunity</span><strong id="opportunityScore">—</strong></div><div class="score-meter"><i id="opportunityMeter"></i></div><small id="opportunityLabel">Menunggu data</small></article>
+                <article class="price-range-card"><span>Sweet spot harga</span><strong id="marketSweetSpot">—</strong><small id="marketRangeCaption">—</small></article>
+              </div>
+            </section>
+
+            <section class="research-content-grid">
+              <div class="trending-list-panel">
+                <div class="research-section-heading"><div><span class="eyebrow">TOP PRODUCTS</span><h3>Produk dengan performa terkuat</h3></div><span class="muted-note" id="resultSortNote">Ranking ARSTORE</span></div>
+                <div class="product-list" id="productList"></div>
+              </div>
+
+              <aside class="research-side-panel">
+                <section class="research-insight-card signal-card">
+                  <span class="eyebrow">MARKET SIGNAL</span>
+                  <h3 id="marketSignalTitle">—</h3>
+                  <p id="marketSignalText">Selesaikan pencarian untuk membaca kondisi pasar.</p>
+                  <div class="signal-bars"><div class="signal-demand"><span>Demand</span><b id="demandValue">—</b><i><em id="demandBar"></em></i></div><div class="signal-competition"><span>Competition</span><b id="competitionValue">—</b><i><em id="competitionBar"></em></i></div><div class="signal-price"><span>Price opportunity</span><b id="priceOpportunityValue">—</b><i><em id="priceOpportunityBar"></em></i></div></div>
+                </section>
+                <section class="research-reference-card" id="referenceCard">
+                  <span class="eyebrow">PRODUK REFERENSI</span>
+                  <div class="reference-empty" id="referenceEmpty"><strong>Belum dipilih</strong><p>Pilih satu listing sebagai referensi pasar. Data kompetitor tidak dianggap sebagai produk milikmu.</p></div>
+                  <div class="reference-selected" id="referenceSelected" hidden><div class="reference-product"><div class="reference-thumb"><img id="referenceImage" alt="Thumbnail produk referensi" hidden /><span id="referenceImageFallback">AR</span></div><div><strong id="referenceName">—</strong><p id="referenceMeta">—</p></div></div><button type="button" class="primary-btn full" id="continueFeeBtn">Lanjut ke Fee Engine <span>→</span></button><button type="button" class="text-action" id="clearReferenceBtn">Ganti referensi</button></div>
+                </section>
+                <section class="freshness-card"><div class="freshness-title"><span class="eyebrow">DATA FRESHNESS</span><span class="freshness-status unknown" id="freshnessStatus">Menunggu</span></div><div><span>Statistik</span><strong id="statTimeValue">—</strong></div><div><span>Update provider</span><strong id="updateTimeValue">—</strong></div><p>ARSTORE tidak membuat angka marketplace. Jika timestamp tidak tersedia dari provider, status akan ditampilkan apa adanya.</p></section>
+              </aside>
+            </section>
+          </div>
+        </div>
+
+        <div class="quick-preview" id="quickPreview" hidden>
+          <div class="quick-preview-backdrop" data-close-quick-preview></div>
+          <section class="quick-preview-card" role="dialog" aria-modal="true" aria-labelledby="quickPreviewName">
+            <div class="quick-preview-handle" aria-hidden="true"></div>
+            <button type="button" class="quick-preview-close" data-close-quick-preview aria-label="Tutup">×</button>
+            <div class="quick-preview-top">
+              <div class="quick-preview-image"><img id="quickPreviewImage" alt="Gambar produk" hidden /><span id="quickPreviewImageFallback">AR</span></div>
+              <div class="quick-preview-copy"><span class="eyebrow">QUICK PRODUCT PREVIEW</span><h3 id="quickPreviewName">—</h3><p id="quickPreviewShop">—</p></div>
+            </div>
+            <div class="quick-preview-metrics">
+              <article><span>Harga</span><strong id="quickPreviewPrice">—</strong></article>
+              <article><span>Terjual 30D</span><strong id="quickPreviewSold">—</strong></article>
+              <article><span>Rating</span><strong id="quickPreviewRating">—</strong></article>
+              <article><span>Jumlah rating</span><strong id="quickPreviewRatings">—</strong></article>
+              <article><span>Omzet 30D</span><strong id="quickPreviewRevenue">—</strong></article>
+              <article class="quick-preview-trend"><span>Trending</span><strong id="quickPreviewTrending">—</strong></article>
+            </div>
+            <div class="quick-preview-actions">
+              <button type="button" class="detail-action" id="quickPreviewDetail"><span class="action-icon">↗</span>Analisis Detail</button>
+              <button type="button" class="use-ref" id="quickPreviewReference"><span class="action-icon">✓</span>Gunakan sebagai Referensi</button>
+              <a class="shopee-action" id="quickPreviewShopee" href="#" target="_blank" rel="noopener noreferrer" hidden><span class="action-icon">↗</span>Lihat di Shopee</a>
+            </div>
+          </section>
+        </div>
+
+        <div class="research-modal" id="researchModal" hidden>
+          <div class="research-modal-backdrop" data-close-modal></div>
+          <section class="research-modal-card" role="dialog" aria-modal="true" aria-labelledby="detailProductName">
+            <button type="button" class="modal-close" data-close-modal aria-label="Tutup">×</button>
+            <div class="modal-product-top"><div class="modal-product-image"><img id="detailProductImage" alt="Gambar produk" hidden /><span id="detailProductImageFallback">AR</span></div><span class="rank-badge" id="detailRank">#1</span><div class="modal-product-copy"><span class="eyebrow">ANALISIS DETAIL</span><h3 id="detailProductName">—</h3><p id="detailShopName">—</p><span class="detail-freshness unknown" id="detailFreshness">Menunggu data</span></div></div>
+            <div class="modal-metrics" id="detailMetrics"></div>
+            <div class="modal-score-grid"><article class="modal-score-card modal-trending"><span>Trending Score</span><strong id="detailTrending">—</strong></article><article class="modal-score-card modal-best-seller"><span>Best Seller Score</span><strong id="detailBestSeller">—</strong></article><article class="modal-score-card modal-price-position near"><span>Posisi Harga</span><strong id="detailPricePosition">—</strong></article></div>
+            <div class="modal-insight-grid"><article><span class="eyebrow">KEKUATAN</span><ul id="detailStrengths"></ul></article><article><span class="eyebrow">RISIKO</span><ul id="detailRisks"></ul></article></div>
+            <div class="modal-actions"><a class="modal-shopee-btn" id="detailShopeeLink" href="#" target="_blank" rel="noopener noreferrer" hidden><span>↗</span>Lihat di Shopee</a><button type="button" class="primary-btn" id="useReferenceBtn">Gunakan sebagai Referensi <span>→</span></button></div>
+          </section>
+        </div>
+      </section>
+      <section class="page" id="page-fee" data-title="Fee Engine">
+        <div class="placeholder-page"><span class="step-badge">STEP 02</span><h2>Fee Engine</h2><p>Biaya admin, program Shopee, seller type, kategori, dan total fee efektif.</p><div class="placeholder-box">Area Fee Engine V2.</div></div>
+      </section>
+      <section class="page" id="page-profit" data-title="Kalkulator Profit">
+        <div class="placeholder-page"><span class="step-badge">STEP 03</span><h2>Kalkulator Profit</h2><p>Hitung profit real setelah modal, fee, packing, voucher, iklan, dan biaya lain.</p><div class="placeholder-box">Area Kalkulator Profit V2.</div></div>
+      </section>
+      <section class="page" id="page-pricing" data-title="Harga Ideal">
+        <div class="placeholder-page"><span class="step-badge">STEP 04</span><h2>Harga Ideal</h2><p>Pilih Hitung Otomatis atau Hitung Manual untuk mencari harga minimum, aman, dan ideal.</p><div class="mode-switch"><button class="mode-btn active">⚙ Hitung Otomatis</button><button class="mode-btn">✍ Hitung Manual</button></div><div class="placeholder-box">Area Harga Ideal V2.</div></div>
+      </section>
+      <section class="page" id="page-ads" data-title="Simulator Iklan">
+        <div class="placeholder-page"><span class="step-badge">STEP 05</span><h2>Simulator Iklan / Kalkulator ROAS</h2><p>Gunakan mode otomatis untuk membaca data workspace, atau manual untuk simulasi bebas.</p><div class="mode-switch"><button class="mode-btn active">⚙ Hitung Otomatis</button><button class="mode-btn">✍ Hitung Manual</button></div><div class="placeholder-box">Area Simulator Iklan V2.</div></div>
+      </section>
+      <section class="page" id="page-decision" data-title="Decision Center">
+        <div class="placeholder-page"><span class="step-badge">STEP 06</span><h2>Decision Center</h2><p>Rangkum seluruh workflow menjadi keputusan dan next action.</p><div class="placeholder-box">Area Decision Center V2.</div></div>
+      </section>
+      <section class="page" id="page-database" data-title="Database Fee Shopee">
+        <div class="placeholder-page"><span class="step-badge secondary">DATA</span><h2>Database Fee Shopee</h2><p>Explorer tarif Shopee untuk mencari kategori, seller type, program, dan menerapkan fee ke workspace.</p><div class="placeholder-box">Area Database Fee V2.</div></div>
+      </section>
+      <section class="page" id="page-settings" data-title="Pengaturan">
+        <div class="placeholder-page"><span class="step-badge secondary">SYSTEM</span><h2>Pengaturan</h2><p>Konfigurasi workspace ARSTORE Tools V2.</p><div class="placeholder-box">Area Pengaturan V2.</div></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Navigasi mobile">
+    <button class="bottom-item active" data-page="dashboard"><span>⌂</span><small>Home</small></button>
+    <button class="bottom-item" data-page="profit"><span>Rp</span><small>Profit</small></button>
+    <button class="bottom-item" data-page="research"><span>⌕</span><small>Trend</small></button>
+    <button class="bottom-item" id="mobileMoreBtn"><span>☰</span><small>Menu</small></button>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script src="js/research.js"></script>
+</body>
+</html>
