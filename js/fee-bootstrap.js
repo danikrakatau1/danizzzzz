@@ -14,7 +14,7 @@ const settings=document.querySelector('#page-settings .placeholder-page');
 if(settings&&!document.getElementById('settingsBackBtn')){
   const b=document.createElement('button'); b.id='settingsBackBtn'; b.type='button'; b.className='settings-back-btn'; b.setAttribute('data-nav-back',''); b.textContent='← Kembali'; settings.prepend(b);
 }
-const files=['/data/shopee-fee-db-regular-2026.js','/data/shopee-fee-db-mall-2026.js','/js/shopee-fee-lookup.js','/js/fee-engine-regression-v1.js','/js/fee-engine-ui.js'];
+const files=['/data/shopee-fee-db-chunk-01.js','/data/shopee-fee-db-chunk-02.js','/data/shopee-fee-db-chunk-03.js','/data/shopee-fee-db-chunk-04.js','/data/shopee-fee-db-chunk-05.js','/data/shopee-fee-db-chunk-06.js','/data/shopee-fee-db-chunk-07.js','/data/shopee-fee-db-chunk-08.js','/data/shopee-fee-db-chunk-09.js','/js/shopee-fee-lookup.js','/js/fee-engine-regression-v1.js','/js/fee-engine-ui.js'];
 function load(i){
   if(i>=files.length)return;
   const s=document.createElement('script'); s.src=files[i]; s.onload=()=>load(i+1); s.onerror=()=>console.error('Gagal memuat Step 02:',files[i]); document.body.appendChild(s);
