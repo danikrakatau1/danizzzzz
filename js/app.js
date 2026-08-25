@@ -1,179 +1,135 @@
 (() => {
-  const pageTitle = document.getElementById('pageTitle');
-  const pages = [...document.querySelectorAll('.page')];
-  const navItems = [...document.querySelectorAll('[data-page]')];
-  const goButtons = [...document.querySelectorAll('[data-go]')];
-  const sidebar = document.getElementById('sidebar');
-  const sidebarOverlay = document.getElementById('sidebarOverlay');
-  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-  const mobileMoreBtn = document.getElementById('mobileMoreBtn');
-  const resetWorkspaceBtn = document.getElementById('resetWorkspaceBtn');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let sidebarScrollY = 0;
-
+  'use strict';
   const ROUTES = Object.freeze({
-    dashboard: '/',
-    research: '/produk-trending',
-    fee: '/fee-engine',
-    profit: '/kalkulator-profit',
-    pricing: '/harga-ideal',
-    ads: '/simulator-iklan',
-    decision: '/decision-center',
-    database: '/database-fee',
-    settings: '/pengaturan'
+    dashboard:'/', research:'/produk-trending', fee:'/fee-engine', profit:'/kalkulator-profit',
+    pricing:'/harga-ideal', ads:'/simulator-iklan', decision:'/decision-center',
+    database:'/database-fee', settings:'/pengaturan'
   });
+  const PAGE_BY_ROUTE = Object.freeze(Object.fromEntries(Object.entries(ROUTES).map(([p,r])=>[r,p])));
+  const HISTORY_KEY='arstore_v2_nav_history';
+  const pageTitle=document.getElementById('pageTitle');
+  const sidebar=document.getElementById('sidebar');
+  const overlay=document.getElementById('sidebarOverlay');
+  const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+  const mobileMoreBtn=document.getElementById('mobileMoreBtn');
+  const resetBtn=document.getElementById('resetWorkspaceBtn');
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const PAGE_BY_ROUTE = Object.freeze(
-    Object.fromEntries(Object.entries(ROUTES).map(([page, route]) => [route, page]))
-  );
-
-  const normalizePath = path => {
-    if (!path) return '/';
-    let clean = path.split('?')[0].split('#')[0];
-    if (!clean.startsWith('/')) clean = `/${clean}`;
-    clean = clean.replace(/\/{2,}/g, '/');
-    if (clean.length > 1) clean = clean.replace(/\/+$/, '');
-    return clean || '/';
+  const normalizePath=path=>{
+    let clean=(path||'/').split('?')[0].split('#')[0];
+    if(!clean.startsWith('/')) clean='/'+clean;
+    clean=clean.replace(/\/{2,}/g,'/');
+    if(clean.length>1) clean=clean.replace(/\/+$/,'');
+    return clean||'/';
+  };
+  const pageFromLocation=()=>PAGE_BY_ROUTE[normalizePath(location.pathname)]||'dashboard';
+  const activePage=()=>document.querySelector('.page.active')?.id?.replace(/^page-/,'')||'dashboard';
+  const getHistory=()=>{try{return JSON.parse(sessionStorage.getItem(HISTORY_KEY)||'[]')}catch(_){return[]}};
+  const setHistory=h=>{try{sessionStorage.setItem(HISTORY_KEY,JSON.stringify(h.slice(-30)))}catch(_){}};
+  const remember=current=>{
+    const h=getHistory();
+    if(current&&h[h.length-1]!==current) h.push(current);
+    setHistory(h);
   };
 
-  const pageFromLocation = () => PAGE_BY_ROUTE[normalizePath(window.location.pathname)] || 'dashboard';
-
-  function retriggerPageAnimation(target) {
-    if (!target || reduceMotion) return;
-    target.classList.remove('is-entering');
-    void target.offsetWidth;
-    target.classList.add('is-entering');
-    window.setTimeout(() => target.classList.remove('is-entering'), 700);
-  }
-
-  function revealToolCards() {
-    const cards = [...document.querySelectorAll('#page-dashboard .tool-card')];
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      cards.forEach(card => card.classList.add('reveal'));
-      return;
-    }
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.14 });
-    cards.forEach(card => observer.observe(card));
-  }
-
-  function updateDocumentMeta(target, name) {
-    const title = target?.dataset.title || 'ARSTORE Tools V2';
-    pageTitle.textContent = title;
-    document.title = name === 'dashboard' ? 'ARSTORE Tools V2' : `${title} — ARSTORE Tools V2`;
-  }
-
-  function showPage(name, { push = true, replace = false, scroll = true } = {}) {
-    const target = document.getElementById(`page-${name}`);
-    if (!target || !ROUTES[name]) return;
-
-    pages.forEach(page => page.classList.toggle('active', page === target));
-    navItems.forEach(item => item.classList.toggle('active', item.dataset.page === name));
-    updateDocumentMeta(target, name);
-    retriggerPageAnimation(target);
-
-    const nextRoute = ROUTES[name];
-    const currentRoute = normalizePath(window.location.pathname);
-    if (push && currentRoute !== nextRoute) {
-      const state = { page: name };
-      if (replace) history.replaceState(state, '', nextRoute);
-      else history.pushState(state, '', nextRoute);
-    }
-
-    if (scroll) window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    closeSidebar();
-  }
-
-  function openSidebar() {
-    if (!sidebar) return;
-    sidebarScrollY = window.scrollY || window.pageYOffset || 0;
-    sidebar.classList.add('open');
-    sidebarOverlay?.classList.add('show');
-    document.body.classList.add('drawer-open');
-    document.body.style.overflow = 'hidden';
-    sidebar.setAttribute('aria-hidden', 'false');
-  }
-
-  function closeSidebar() {
+  function closeSidebar(){
     sidebar?.classList.remove('open');
-    sidebarOverlay?.classList.remove('show');
-    document.body.classList.remove('drawer-open');
-    /* Do not unlock body while a product modal / quick preview owns the lock. */
-    const researchModalOpen = document.querySelector('.research-modal.is-open,.quick-preview.is-open');
-    if (!researchModalOpen) document.body.style.overflow = '';
-    sidebar?.setAttribute('aria-hidden', window.matchMedia('(max-width: 820px)').matches ? 'true' : 'false');
+    overlay?.classList.remove('show');
+    document.body.classList.remove('drawer-open','sidebar-open','menu-open');
+    if(!document.querySelector('.research-modal.is-open,.quick-preview.is-open')) document.body.style.overflow='';
+    mobileMenuBtn?.setAttribute('aria-expanded','false');
+    sidebar?.setAttribute('aria-hidden',matchMedia('(max-width:820px)').matches?'true':'false');
+  }
+  function openSidebar(){
+    if(!sidebar)return;
+    sidebar.classList.add('open'); overlay?.classList.add('show');
+    document.body.classList.add('drawer-open'); document.body.style.overflow='hidden';
+    mobileMenuBtn?.setAttribute('aria-expanded','true'); sidebar.setAttribute('aria-hidden','false');
+  }
+  function toggleSidebar(e){
+    e?.preventDefault();
+    sidebar?.classList.contains('open')?closeSidebar():openSidebar();
+  }
+  function animatePage(target){
+    if(!target||reduceMotion)return;
+    target.classList.remove('is-entering'); void target.offsetWidth; target.classList.add('is-entering');
+    setTimeout(()=>target.classList.remove('is-entering'),700);
+  }
+  function showPage(name,{push=true,replace=false,scroll=true,rememberFrom=false}={}){
+    const target=document.getElementById(`page-${name}`);
+    if(!target||!ROUTES[name])return false;
+    const current=activePage();
+    if(rememberFrom&&current!==name) remember(current);
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===target));
+    document.querySelectorAll('[data-page]').forEach(i=>i.classList.toggle('active',i.dataset.page===name));
+    const title=target.dataset.title||'ARSTORE Tools V2';
+    if(pageTitle) pageTitle.textContent=title;
+    document.title=name==='dashboard'?'ARSTORE Tools V2':`${title} — ARSTORE Tools V2`;
+    animatePage(target);
+    const route=ROUTES[name], currentRoute=normalizePath(location.pathname);
+    if(push&&currentRoute!==route){
+      const state={page:name};
+      replace?history.replaceState(state,'',route):history.pushState(state,'',route);
+    }
+    if(scroll) scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+    closeSidebar();
+    return true;
+  }
+  function goBack(){
+    const h=getHistory(), prev=h.pop(); setHistory(h);
+    if(prev&&showPage(prev,{rememberFrom:false})) return;
+    const current=activePage();
+    if(current!=='dashboard') showPage('dashboard',{rememberFrom:false});
+    else closeSidebar();
   }
 
-  navItems.forEach(item => item.addEventListener('click', event => {
-    event.preventDefault();
-    showPage(item.dataset.page);
-  }));
-
-  goButtons.forEach(item => {
-    item.addEventListener('click', event => {
-      event.preventDefault();
-      showPage(item.dataset.go);
-    });
-    if (item.matches('[tabindex]')) {
-      item.addEventListener('keydown', event => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          showPage(item.dataset.go);
-        }
-      });
+  document.addEventListener('click',e=>{
+    const back=e.target.closest('[data-nav-back]');
+    if(back){e.preventDefault();goBack();return}
+    const nav=e.target.closest('[data-page],[data-go]');
+    if(nav){
+      const name=nav.dataset.page||nav.dataset.go;
+      if(name&&ROUTES[name]){e.preventDefault();showPage(name,{rememberFrom:true});return}
+    }
+    const mode=e.target.closest('.mode-btn');
+    if(mode){
+      const group=mode.closest('.mode-switch');
+      group?.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b===mode));
     }
   });
 
-  window.addEventListener('popstate', () => {
-    showPage(pageFromLocation(), { push: false, scroll: false });
-  });
-
-  mobileMenuBtn?.addEventListener('click', openSidebar);
-  mobileMoreBtn?.addEventListener('click', openSidebar);
-  sidebarOverlay?.addEventListener('click', closeSidebar);
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeSidebar(); });
-
-  document.querySelectorAll('.mode-switch').forEach(group => {
-    group.querySelectorAll('.mode-btn').forEach(btn => btn.addEventListener('click', () => {
-      group.querySelectorAll('.mode-btn').forEach(item => item.classList.remove('active'));
-      btn.classList.add('active');
-    }));
-  });
-
-  resetWorkspaceBtn?.addEventListener('click', () => {
-    if (confirm('Reset tampilan workspace V2?\n\nBelum ada data bisnis yang tersimpan pada dashboard shell ini.')) {
-      showPage('dashboard');
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') closeSidebar();
+    const nav=e.target.closest?.('[data-go][tabindex]');
+    if(nav&&(e.key==='Enter'||e.key===' ')){
+      e.preventDefault(); showPage(nav.dataset.go,{rememberFrom:true});
     }
   });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 820) {
-      sidebar?.classList.remove('open');
-      sidebarOverlay?.classList.remove('show');
-      document.body.classList.remove('drawer-open');
-      if (!document.querySelector('.research-modal.is-open,.quick-preview.is-open')) document.body.style.overflow = '';
-      sidebar?.setAttribute('aria-hidden', 'false');
-    } else if (!sidebar?.classList.contains('open')) {
-      sidebar?.setAttribute('aria-hidden', 'true');
+  window.addEventListener('popstate',()=>showPage(pageFromLocation(),{push:false,scroll:false,rememberFrom:false}));
+  mobileMenuBtn?.addEventListener('click',toggleSidebar);
+  mobileMoreBtn?.addEventListener('click',toggleSidebar);
+  overlay?.addEventListener('click',closeSidebar);
+  resetBtn?.addEventListener('click',()=>{
+    if(confirm('Reset tampilan workspace V2?\n\nData analisis tersimpan lokal akan tetap aman kecuali dihapus dari masing-masing step.')){
+      setHistory([]); showPage('dashboard',{rememberFrom:false});
     }
-  }, { passive: true });
+  });
+  window.addEventListener('resize',()=>{
+    if(innerWidth>820) closeSidebar();
+    else if(!sidebar?.classList.contains('open')) sidebar?.setAttribute('aria-hidden','true');
+  },{passive:true});
+  if(innerWidth<=820) sidebar?.setAttribute('aria-hidden','true');
 
-  if (window.innerWidth <= 820) sidebar?.setAttribute('aria-hidden', 'true');
+  const initial=pageFromLocation(), path=normalizePath(location.pathname);
+  if(!PAGE_BY_ROUTE[path]) history.replaceState({page:'dashboard'},'',ROUTES.dashboard);
+  else history.replaceState({page:initial},'',ROUTES[initial]);
+  showPage(initial,{push:false,scroll:false,rememberFrom:false});
 
-  revealToolCards();
+  window.ARSTORE_NAV={showPage,goBack,openSidebar,closeSidebar};
 
-  const initialPage = pageFromLocation();
-  const normalizedInitialPath = normalizePath(window.location.pathname);
-  if (!PAGE_BY_ROUTE[normalizedInitialPath]) {
-    history.replaceState({ page: 'dashboard' }, '', ROUTES.dashboard);
-  } else {
-    history.replaceState({ page: initialPage }, '', ROUTES[initialPage]);
+  if(!document.querySelector('script[data-arstore-fee-bootstrap]')){
+    const s=document.createElement('script');
+    s.src='/js/fee-bootstrap.js'; s.defer=true; s.dataset.arstoreFeeBootstrap='1';
+    document.body.appendChild(s);
   }
-  showPage(initialPage, { push: false, scroll: false });
 })();
