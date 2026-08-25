@@ -1,0 +1,11 @@
+{
+  "name": "ARSTORE Tools V2",
+  "short_name": "ARSTORE",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#080b12",
+  "icons": [
+    {"src":"/assets/arstore-emblem-transparent.png","sizes":"any","type":"image/png","purpose":"any maskable"}
+  ]
+}
