@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/produk-trending", "destination": "/" },
+    { "source": "/fee-engine", "destination": "/" },
+    { "source": "/kalkulator-profit", "destination": "/" },
+    { "source": "/harga-ideal", "destination": "/" },
+    { "source": "/simulator-iklan", "destination": "/" },
+    { "source": "/decision-center", "destination": "/" },
+    { "source": "/database-fee", "destination": "/" },
+    { "source": "/pengaturan", "destination": "/" }
+  ]
+}
