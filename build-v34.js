@@ -13,9 +13,11 @@ fs.rmSync('public',{recursive:true,force:true});fs.mkdirSync('public',{recursive
 const src='assets/arstore-emblem-transparent.png',dst='public/assets/arstore-emblem-transparent.png';fs.mkdirSync(path.dirname(dst),{recursive:true});fs.copyFileSync(src,dst);
 if(sha(fs.readFileSync(dst))!=='3ecfcfe7a95283c15669f0aeed013d3990b1d0a1bc9172773566b486f0d2488d')throw new Error('emblem checksum');
 
-// V3.4 UI-THEME-FIXED overlay only. Master fee/formula/DB payload stays byte-identical above.
+// V3.4 UI overlays only. Master fee/formula/DB payload stays byte-identical above.
 const htmlPath='public/index.html';
 let html=fs.readFileSync(htmlPath,'utf8');
+
+// Free-form Rupiah input: do not force multiples of Rp100/Rp1.000.
 const moneyIds=[
   'shopeeRoasRevenue','shopeeRoasAdSpend','shopeeRoasCogs','shopeeRoasMarketplaceFee','shopeeRoasOtherCost',
   'shopeePriceHpp','shopeePricePacking','shopeePriceOps','shopeePriceAds','shopeePriceExtra','shopeePriceFixedFee','shopeePriceTargetProfit',
@@ -29,9 +31,52 @@ for(const id of moneyIds){
   html=html.replace(re,(m,a,b)=>{patched++;return a+'1'+b;});
 }
 if(patched!==moneyIds.length)throw new Error('UI money step patch count '+patched+' / '+moneyIds.length);
+
+// Optional money defaults show 0 as a placeholder, not as editable content.
+const zeroPlaceholderIds=[
+  'shopeePricePacking','shopeePriceOps','shopeePriceAds','shopeePriceExtra',
+  'tiktokRoasFixedFee','tiktokPricePacking','tiktokPriceOps','tiktokPriceAds','tiktokPriceExtra','tiktokPriceFixedFee',
+  'profitPacking','profitAds','profitOps','profitExtra'
+];
+let zeroPatched=0;
+for(const id of zeroPlaceholderIds){
+  const re=new RegExp('<input\\b[^>]*\\bid="'+id+'"[^>]*>');
+  html=html.replace(re,tag=>{
+    zeroPatched++;
+    let next=tag.replace(/\svalue="0"/,'');
+    if(!/\splaceholder=/.test(next))next=next.replace(/>$/,' placeholder="0">');
+    return next;
+  });
+}
+if(zeroPatched!==zeroPlaceholderIds.length)throw new Error('UI zero placeholder patch count '+zeroPatched+' / '+zeroPlaceholderIds.length);
+
+// Reduce native browser form restoration for calculator drafts.
+const draftFormIds=['shopeeRoasForm','shopeePriceForm','tiktokRoasForm','tiktokPriceForm','profitForm'];
+let formPatched=0;
+for(const id of draftFormIds){
+  const re=new RegExp('<form\\b[^>]*\\bid="'+id+'"[^>]*>');
+  html=html.replace(re,tag=>{
+    formPatched++;
+    return /\sautocomplete=/.test(tag)?tag:tag.replace(/>$/,' autocomplete="off">');
+  });
+}
+if(formPatched!==draftFormIds.length)throw new Error('UI form persistence patch count '+formPatched+' / '+draftFormIds.length);
+
+// Runtime-only UI behavior: reset calculator drafts, premium loaders, sidebar scroll, motion.
+const runtimeSrc='ui-runtime-v34.js';
+const runtimeDst='public/js/ui-runtime-v34.js';
+cp.execFileSync(process.execPath,['--check',runtimeSrc],{stdio:'inherit'});
+fs.mkdirSync(path.dirname(runtimeDst),{recursive:true});
+fs.copyFileSync(runtimeSrc,runtimeDst);
+if(!html.includes('js/ui-runtime-v34.js')){
+  html=html.replace('</body>','  <script src="js/ui-runtime-v34.js"></script>\n</body>');
+}
 fs.writeFileSync(htmlPath,html);
+
 const cssPatch=fs.readFileSync('ui-theme-patch.css','utf8');
 if(!cssPatch.includes('V3.4 FINAL THEME + FORM CONSISTENCY PACK'))throw new Error('UI theme patch marker missing');
-fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n');
+const polishPatch=fs.readFileSync('ui-polish-v34.css','utf8');
+if(!polishPatch.includes('POST-DEPLOY POLISH PACK #14–#22'))throw new Error('UI polish patch marker missing');
+fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n'+polishPatch+'\n');
 
-console.log('V3.4 verified runtime built',xz.length,'bytes','UI patch',patched,'inputs');
+console.log('V3.4 verified runtime built',xz.length,'bytes','money',patched,'zero-placeholder',zeroPatched,'forms',formPatched,'UI overlays active');
