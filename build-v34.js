@@ -69,15 +69,55 @@ const runtimeDst='public/js/ui-runtime-v34.js';
 cp.execFileSync(process.execPath,['--check',runtimeSrc],{stdio:'inherit'});
 fs.mkdirSync(path.dirname(runtimeDst),{recursive:true});
 fs.copyFileSync(runtimeSrc,runtimeDst);
-if(!html.includes('js/ui-runtime-v34.js')){
-  html=html.replace('</body>','  <script src="js/ui-runtime-v34.js"></script>\n</body>');
+if(!html.includes('js/ui-runtime-v34.js')) html=html.replace('</body>','  <script src="js/ui-runtime-v34.js"></script>\n</body>');
+
+// #34/#35 — user-provided AR favicon + Shopee/TikTok sidebar icons, transported as verified text assets.
+const finalAssets=require('./ui-final-assets-v34.js');
+const assetMap={
+  'public/assets/shopee-nav-icon.png':finalAssets.shopee,
+  'public/assets/tiktok-nav-icon.png':finalAssets.tiktok,
+  'public/assets/favicons/favicon-48x48.png':finalAssets.favicon48,
+  'public/assets/favicons/favicon-32x32.png':finalAssets.favicon48,
+  'public/assets/favicons/favicon-16x16.png':finalAssets.favicon48
+};
+for(const [file,data] of Object.entries(assetMap)){
+  if(!data||data.length<500)throw new Error('final UI asset missing '+file);
+  fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,Buffer.from(data,'base64'));
 }
+html=html.replace('href="/assets/favicons/favicon.ico" sizes="any"','href="/assets/favicons/favicon-48x48.png" sizes="48x48"');
+let marketIconPatched=0;
+html=html.replace('<span class="nav-subdot"></span><span>Shopee</span><span class="nav-chevron"',()=>{marketIconPatched++;return '<img class="market-brand-icon" data-market-icon="shopee" src="assets/shopee-nav-icon.png" alt="" aria-hidden="true"><span>Shopee</span><span class="nav-chevron"';});
+html=html.replace('<span class="nav-subdot"></span><span>TikTok</span><span class="nav-chevron"',()=>{marketIconPatched++;return '<img class="market-brand-icon" data-market-icon="tiktok" src="assets/tiktok-nav-icon.png" alt="" aria-hidden="true"><span>TikTok</span><span class="nav-chevron"';});
+if(marketIconPatched!==2)throw new Error('market icon patch count '+marketIconPatched);
+
+// #32/#33 — third Charcoal theme + persistence support. Patch UI shell only.
+if(!html.includes('data-theme-choice="charcoal"')){
+  html=html.replace('<button type="button" data-theme-choice="light">Terang</button>','<button type="button" data-theme-choice="light">Terang</button>\n              <button type="button" data-theme-choice="charcoal">Charcoal</button>');
+}
+html=html.replace('Pilih tema gelap atau terang. Preferensi tersimpan di browser.','Pilih tema gelap, terang, atau charcoal. Preferensi tersimpan di browser.');
+const shellPath='public/js/v3-shell.js';
+let shell=fs.readFileSync(shellPath,'utf8');
+let themeLogicPatched=0;
+shell=shell.replace("const next = theme === 'light' ? 'light' : 'dark';",()=>{themeLogicPatched++;return "const next = (theme === 'light' || theme === 'charcoal') ? theme : 'dark';";});
+shell=shell.replace("metaTheme?.setAttribute('content', next === 'light' ? '#f4f6fb' : '#080b12');",()=>{themeLogicPatched++;return "metaTheme?.setAttribute('content', next === 'light' ? '#edf1f6' : next === 'charcoal' ? '#101114' : '#080b12');";});
+if(themeLogicPatched!==2)throw new Error('charcoal theme logic patch '+themeLogicPatched);
+fs.writeFileSync(shellPath,shell);
+cp.execFileSync(process.execPath,['--check',shellPath],{stdio:'inherit'});
+
+// #23–#36 — final visual runtime + theme/HD/semantic/skeleton layer.
+const finalRuntimeSrc='ui-final-runtime-v34.js';
+const finalRuntimeDst='public/js/ui-final-runtime-v34.js';
+cp.execFileSync(process.execPath,['--check',finalRuntimeSrc],{stdio:'inherit'});
+fs.copyFileSync(finalRuntimeSrc,finalRuntimeDst);
+if(!html.includes('js/ui-final-runtime-v34.js')) html=html.replace('</body>','  <script src="js/ui-final-runtime-v34.js"></script>\n</body>');
 fs.writeFileSync(htmlPath,html);
 
 const cssPatch=fs.readFileSync('ui-theme-patch.css','utf8');
 if(!cssPatch.includes('V3.4 FINAL THEME + FORM CONSISTENCY PACK'))throw new Error('UI theme patch marker missing');
 const polishPatch=fs.readFileSync('ui-polish-v34.css','utf8');
 if(!polishPatch.includes('POST-DEPLOY POLISH PACK #14–#22'))throw new Error('UI polish patch marker missing');
-fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n'+polishPatch+'\n');
+const finalSweep=fs.readFileSync('ui-final-sweep-v34.css','utf8');
+if(!finalSweep.includes('FINAL SWEEP #23–#36'))throw new Error('final sweep marker missing');
+fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n'+polishPatch+'\n'+finalSweep+'\n');
 
-console.log('V3.4 verified runtime built',xz.length,'bytes','money',patched,'zero-placeholder',zeroPatched,'forms',formPatched,'UI overlays active');
+console.log('V3.4 verified runtime built',xz.length,'bytes','money',patched,'zero-placeholder',zeroPatched,'forms',formPatched,'market-icons',marketIconPatched,'theme-patches',themeLogicPatched,'FINAL #23-36 active');
