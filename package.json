@@ -1,8 +1,9 @@
 {
   "name": "arstore-tools-v3",
-  "version": "3.1.0-production",
+  "version": "3.4.0-production-candidate",
   "private": true,
   "scripts": {
+    "build": "node build-v34.js",
     "dev": "npx vercel dev"
   }
 }

@@ -30,6 +30,10 @@ module.exports = async function handler(req, res) {
       return;
     }
   }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    res.status(400).json({ message: 'Body request harus berupa object JSON.' });
+    return;
+  }
 
   const keyword = String(body.keyword || '').trim();
   if (!keyword) {
@@ -80,7 +84,6 @@ module.exports = async function handler(req, res) {
   for (const base of bases) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 20000);
-
     try {
       const upstream = await fetch(base + apiPath, {
         method: 'POST',
@@ -111,7 +114,6 @@ module.exports = async function handler(req, res) {
         status: upstream.status,
         message: data?.message || data?.msg || data?.errmsg || `HTTP ${upstream.status}`
       });
-
       if (![404, 405, 429, 502, 503, 504].includes(upstream.status)) break;
     } catch (error) {
       attempts.push({
