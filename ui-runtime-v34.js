@@ -183,10 +183,11 @@
     const observer = new MutationObserver(records => {
       records.forEach(record => {
         const page = record.target;
-        if (!page.classList.contains('active')) return;
-        page.classList.remove('ui-page-enter');
-        void page.offsetWidth;
-        page.classList.add('ui-page-enter');
+        if (page.classList.contains('active')) {
+          if (!page.classList.contains('ui-page-enter')) page.classList.add('ui-page-enter');
+        } else if (page.classList.contains('ui-page-enter')) {
+          page.classList.remove('ui-page-enter');
+        }
       });
     });
     pages.forEach(page => observer.observe(page, {attributes:true, attributeFilter:['class']}));
