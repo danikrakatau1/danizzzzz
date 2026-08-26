@@ -1,0 +1,52 @@
+/* ===== V3.4 FINAL #37–#60 POST-AUDIT HARDENING =====
+   Cascade-only fixes for mobile drawer close motion and 4-theme selector.
+   No calculator, fee, DB, GOX, profit, ROAS or decision logic. */
+
+@media (max-width:820px), (max-width:900px) and (pointer:coarse){
+  /* Override the older viewport hotfix with equal/higher selector specificity so
+     the closed drawer remains composited off-screen long enough to animate out. */
+  .sidebar:not(.open):not(.active):not(.is-open){
+    transform:translate3d(-104%,0,0)!important;
+    visibility:visible!important;
+    pointer-events:none!important;
+    opacity:.995!important;
+    box-shadow:none!important;
+    filter:none!important;
+    transition:transform var(--ui-motion-drawer) var(--ui-ease),opacity 180ms ease,visibility 0s linear var(--ui-motion-drawer)!important;
+  }
+  .sidebar-overlay:not(.show):not(.active):not(.visible){
+    opacity:0!important;
+    visibility:visible!important;
+    pointer-events:none!important;
+    background:rgba(3,5,10,.46)!important;
+    box-shadow:none!important;
+    backdrop-filter:blur(0)!important;
+    -webkit-backdrop-filter:blur(0)!important;
+    transition:opacity 250ms ease,backdrop-filter 250ms ease,visibility 0s linear 250ms!important;
+  }
+
+  /* Four themes need a real mobile layout; 2×2 is safer than squeezing four
+     labels into the previous three-column control. */
+  .theme-segment{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+    width:100%!important;
+  }
+  .theme-segment button{
+    min-width:0!important;
+    min-height:44px!important;
+    height:auto!important;
+    padding:9px 8px!important;
+    white-space:normal!important;
+    line-height:1.2!important;
+  }
+}
+
+@media (min-width:821px){
+  .theme-segment{flex-wrap:wrap!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .sidebar,.sidebar-overlay{transition:none!important}
+}
