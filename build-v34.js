@@ -36,6 +36,7 @@ if(patched!==moneyIds.length)throw new Error('UI money step patch count '+patche
 const zeroPlaceholderIds=[
   'shopeePricePacking','shopeePriceOps','shopeePriceAds','shopeePriceExtra',
   'tiktokRoasFixedFee','tiktokPricePacking','tiktokPriceOps','tiktokPriceAds','tiktokPriceExtra','tiktokPriceFixedFee',
+  'feeVoucherSeller','feeProcessingManual',
   'profitPacking','profitAds','profitOps','profitExtra'
 ];
 let zeroPatched=0;
@@ -51,7 +52,7 @@ for(const id of zeroPlaceholderIds){
 if(zeroPatched!==zeroPlaceholderIds.length)throw new Error('UI zero placeholder patch count '+zeroPatched+' / '+zeroPlaceholderIds.length);
 
 // Reduce native browser form restoration for calculator drafts.
-const draftFormIds=['shopeeRoasForm','shopeePriceForm','tiktokRoasForm','tiktokPriceForm','profitForm'];
+const draftFormIds=['shopeeRoasForm','shopeePriceForm','tiktokRoasForm','tiktokPriceForm','feeForm','profitForm'];
 let formPatched=0;
 for(const id of draftFormIds){
   const re=new RegExp('<form\\b[^>]*\\bid="'+id+'"[^>]*>');
