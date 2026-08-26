@@ -1,34 +1,10 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/seller-tools", "destination": "/" },
-    { "source": "/seller-tools/produk-trending", "destination": "/" },
-    { "source": "/seller-tools/fee-engine", "destination": "/" },
-    { "source": "/seller-tools/kalkulator-profit", "destination": "/" },
-    { "source": "/seller-tools/harga-ideal", "destination": "/" },
-    { "source": "/seller-tools/simulator-iklan", "destination": "/" },
-    { "source": "/seller-tools/decision-center", "destination": "/" },
-    { "source": "/market-tools/shopee/kalkulator-roas", "destination": "/" },
-    { "source": "/market-tools/shopee/harga-jual", "destination": "/" },
-    { "source": "/market-tools/tiktok/kalkulator-roas", "destination": "/" },
-    { "source": "/market-tools/tiktok/harga-jual", "destination": "/" },
-    { "source": "/produk/produk-saya", "destination": "/" },
-    { "source": "/produk/keuangan", "destination": "/" },
-    { "source": "/produk/stok", "destination": "/" },
-    { "source": "/produk/kompetitor", "destination": "/" },
-    { "source": "/produk/content-affiliate", "destination": "/" },
-    { "source": "/produk/order-analytics", "destination": "/" },
-    { "source": "/database", "destination": "/" },
-    { "source": "/pengaturan", "destination": "/" },
-
-    { "source": "/produk-trending", "destination": "/" },
-    { "source": "/fee-engine", "destination": "/" },
-    { "source": "/kalkulator-profit", "destination": "/" },
-    { "source": "/harga-ideal", "destination": "/" },
-    { "source": "/simulator-iklan", "destination": "/" },
-    { "source": "/decision-center", "destination": "/" },
-    { "source": "/database-fee", "destination": "/" },
-    { "source": "/kalkulator-roas", "destination": "/" },
-    { "source": "/harga-jual", "destination": "/" },
-    { "source": "/produk", "destination": "/" }
+    { "source": "/seller-tools", "destination": "/" }, { "source": "/seller-tools/produk-trending", "destination": "/" }, { "source": "/seller-tools/fee-engine", "destination": "/" }, { "source": "/seller-tools/kalkulator-profit", "destination": "/" }, { "source": "/seller-tools/harga-ideal", "destination": "/" }, { "source": "/seller-tools/simulator-iklan", "destination": "/" }, { "source": "/seller-tools/decision-center", "destination": "/" },
+    { "source": "/market-tools/shopee/kalkulator-roas", "destination": "/" }, { "source": "/market-tools/shopee/harga-jual", "destination": "/" }, { "source": "/market-tools/tiktok/kalkulator-roas", "destination": "/" }, { "source": "/market-tools/tiktok/harga-jual", "destination": "/" },
+    { "source": "/produk/produk-saya", "destination": "/" }, { "source": "/produk/keuangan", "destination": "/" }, { "source": "/produk/stok", "destination": "/" }, { "source": "/produk/kompetitor", "destination": "/" }, { "source": "/produk/content-affiliate", "destination": "/" }, { "source": "/produk/order-analytics", "destination": "/" }, { "source": "/database", "destination": "/" }, { "source": "/pengaturan", "destination": "/" },
+    { "source": "/produk-trending", "destination": "/" }, { "source": "/fee-engine", "destination": "/" }, { "source": "/kalkulator-profit", "destination": "/" }, { "source": "/harga-ideal", "destination": "/" }, { "source": "/simulator-iklan", "destination": "/" }, { "source": "/decision-center", "destination": "/" }, { "source": "/database-fee", "destination": "/" }, { "source": "/kalkulator-roas", "destination": "/" }, { "source": "/harga-jual", "destination": "/" }, { "source": "/produk", "destination": "/" }
   ]
 }
