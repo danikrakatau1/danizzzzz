@@ -1,8 +1,6 @@
 {
-  "name": "arstore-tools-v3",
-  "version": "3.1.0-production",
-  "private": true,
-  "scripts": {
-    "dev": "npx vercel dev"
-  }
+  "name":"arstore-tools-v3",
+  "version":"3.4.0-final-production-regression",
+  "private":true,
+  "scripts":{"build":"node build-v34.js","dev":"npx vercel dev"}
 }

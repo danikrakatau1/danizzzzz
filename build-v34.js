@@ -1,0 +1,15 @@
+const fs=require('fs');const path=require('path');const crypto=require('crypto');const cp=require('child_process');
+const P='.deploy-v34/';
+const parts=['p00','p01','p02','p03','p04','p05','p06-00','p06-01','p06-02','p06-03','p06-04','p06-05','p06-06','p06-07','p07-00','p07-01','p07-02','p07-03','p07-04','p07-05','p07-06','p07-07','p08-00','p08-01','p08-02','p08-03','p08-04','p08-05','p08-06'];
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const b64=parts.map(n=>fs.readFileSync(P+n,'utf8')).join('');
+if(b64.length!==176360)throw new Error('payload length '+b64.length);
+if(sha(b64)!=='9c061331efaf8606efd6b8bcf1ddf07d1ab2b30571c388b87876e1e69c5fbd7c')throw new Error('payload text checksum');
+const xz=Buffer.from(b64,'base64');
+if(xz.length!==132268)throw new Error('payload binary length '+xz.length);
+if(sha(xz)!=='2072eb660217d69c81738c4351ed6f8f7cead2ff7449ce5096584546296afa3d')throw new Error('payload binary checksum');
+fs.writeFileSync('payload-v34.tar.xz',xz);cp.execFileSync('xz',['-t','payload-v34.tar.xz'],{stdio:'inherit'});
+fs.rmSync('public',{recursive:true,force:true});fs.mkdirSync('public',{recursive:true});cp.execFileSync('tar',['-xJf','payload-v34.tar.xz','-C','public'],{stdio:'inherit'});
+const src='assets/arstore-emblem-transparent.png',dst='public/assets/arstore-emblem-transparent.png';fs.mkdirSync(path.dirname(dst),{recursive:true});fs.copyFileSync(src,dst);
+if(sha(fs.readFileSync(dst))!=='3ecfcfe7a95283c15669f0aeed013d3990b1d0a1bc9172773566b486f0d2488d')throw new Error('emblem checksum');
+console.log('V3.4 verified runtime built',xz.length,'bytes');
