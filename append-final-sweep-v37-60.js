@@ -2,6 +2,7 @@ const fs=require('fs');
 const path=require('path');
 const cp=require('child_process');
 const MARK='FINAL SWEEP #37–#60';
+const HARDENING_MARK='FINAL #37–#60 POST-AUDIT HARDENING';
 const htmlPath='public/index.html';
 const cssPath='public/css/app.css';
 const shellPath='public/js/v3-shell.js';
@@ -10,8 +11,10 @@ if(!fs.existsSync(htmlPath)||!fs.existsSync(cssPath)||!fs.existsSync(shellPath))
 let html=fs.readFileSync(htmlPath,'utf8');
 let shell=fs.readFileSync(shellPath,'utf8');
 const css=fs.readFileSync('ui-final-sweep-v37-60.css','utf8');
+const hardeningCss=fs.readFileSync('ui-final-hardening-v37-60.css','utf8');
 const runtime=fs.readFileSync('ui-final-runtime-v37-60.js','utf8');
 if(!css.includes(MARK))throw new Error('final #37-60 CSS marker missing');
+if(!hardeningCss.includes(HARDENING_MARK))throw new Error('post-audit hardening marker missing');
 cp.execFileSync(process.execPath,['--check','ui-final-runtime-v37-60.js'],{stdio:'inherit'});
 
 // #37 — add OLED as a fourth persisted theme in the generated UI.
@@ -84,7 +87,9 @@ const manifest={name:'ARSTORE Tools V3.4',short_name:'ARSTORE',start_url:'/',dis
 ]};
 fs.writeFileSync('public/site.webmanifest',JSON.stringify(manifest,null,2)+'\n');
 
-fs.appendFileSync(cssPath,'\n'+css+'\n');
+// Append the main final sweep, then post-audit overrides last so older hotfix
+// specificity cannot clip drawer close animations or the four-theme mobile grid.
+fs.appendFileSync(cssPath,'\n'+css+'\n'+hardeningCss+'\n');
 html=html.replace('<html lang="id">','<html lang="id" data-ui-sweep="37-60">');
 fs.writeFileSync(htmlPath,html);
 
@@ -98,8 +103,10 @@ const checks=[
   ['favicon 512',fs.existsSync('public/assets/favicons/favicon-512x512.png')],['favicon ICO',fs.existsSync('public/favicon.ico')],
   ['manifest',fs.existsSync('public/site.webmanifest')],['CSS marker',builtCss.includes(MARK)],
   ['OLED CSS',builtCss.includes('html[data-theme="oled"]')],['shell OLED',builtShell.includes("theme === 'oled'")],
-  ['history runtime',runtime.includes('__arIdx')],['swipe underlay',builtCss.includes('.ui-swipe-underlay')]
+  ['history runtime',runtime.includes('__arIdx')],['pop capture',runtime.includes('{capture:true}')],
+  ['swipe underlay',builtCss.includes('.ui-swipe-underlay')],['hardening marker',builtCss.includes(HARDENING_MARK)],
+  ['four theme grid',builtCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))')]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([name])=>name);
 if(failed.length)throw new Error('FINAL #37-60 gate failed: '+failed.join(', '));
-console.log('V3.4 FINAL #37-60 appended · OLED + motion + iOS history + AR hanger favicon + visual gate PASS');
+console.log('V3.4 FINAL #37-60 appended · OLED + motion + iOS history + AR hanger favicon + post-audit hardening PASS');
