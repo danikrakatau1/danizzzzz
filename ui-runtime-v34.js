@@ -12,6 +12,8 @@
     tiktokRoasOrders:'1', tiktokRoasItems:'1', tiktokRoasFixedFee:'', tiktokRoasTarget:'3',
     tiktokPriceHpp:'', tiktokPricePacking:'', tiktokPriceOps:'', tiktokPriceAds:'', tiktokPriceExtra:'',
     tiktokPriceFixedFee:'', tiktokPriceTargetMargin:'20', tiktokPriceTargetProfit:'20000',
+    feeHargaJual:'', feeVoucherSeller:'', feeQuantity:'1', feeFirstProductDate:'', feeCompletedOrders:'0', feeFirstJoinDate:'',
+    feeProductAgeDays:'', feeProcessingManual:'', feeAmsActual:'', feeActualNet:'',
     profitManualPrice:'', profitManualFee:'', profitManualNet:'', profitHpp:'', profitPacking:'', profitAds:'', profitOps:'', profitExtra:'',
     profitTargetNominal:'', profitTargetMargin:'', profitQty:'1', profitMinSafe:'10000', profitCpaBuffer:'20'
   };
@@ -19,11 +21,12 @@
   const zeroPlaceholderIds = new Set([
     'shopeePricePacking','shopeePriceOps','shopeePriceAds','shopeePriceExtra',
     'tiktokRoasFixedFee','tiktokPricePacking','tiktokPriceOps','tiktokPriceAds','tiktokPriceExtra','tiktokPriceFixedFee',
+    'feeVoucherSeller','feeProcessingManual',
     'profitPacking','profitAds','profitOps','profitExtra'
   ]);
 
   const formsToDePersist = [
-    'shopeeRoasForm','shopeePriceForm','tiktokRoasForm','tiktokPriceForm','profitForm'
+    'shopeeRoasForm','shopeePriceForm','tiktokRoasForm','tiktokPriceForm','feeForm','profitForm'
   ];
 
   function resetDraftInputs() {
@@ -94,6 +97,7 @@
     resultCard.dataset.uiLoading = '1';
     resultCard.setAttribute('aria-busy', 'true');
     overlay.setAttribute('aria-hidden', 'false');
+    form.classList.add('ui-form-calculating');
     requestAnimationFrame(() => overlay.classList.add('is-visible'));
 
     const submit = form.querySelector('[type="submit"]');
@@ -114,6 +118,7 @@
         resultCard.classList.add('ui-result-reveal');
         resultCard.setAttribute('aria-busy', 'false');
         delete resultCard.dataset.uiLoading;
+        form.classList.remove('ui-form-calculating');
         if (submit) {
           submit.classList.remove('ui-is-calculating');
           submit.setAttribute('aria-busy', 'false');
