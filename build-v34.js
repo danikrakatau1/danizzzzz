@@ -71,18 +71,27 @@ fs.mkdirSync(path.dirname(runtimeDst),{recursive:true});
 fs.copyFileSync(runtimeSrc,runtimeDst);
 if(!html.includes('js/ui-runtime-v34.js')) html=html.replace('</body>','  <script src="js/ui-runtime-v34.js"></script>\n</body>');
 
-// #34/#35 — user-provided AR favicon + Shopee/TikTok sidebar icons, transported as verified text assets.
+// #34/#35 — user-provided AR favicon + Shopee/TikTok sidebar icons.
 const finalAssets=require('./ui-final-assets-v34.js');
+const read64=file=>fs.readFileSync(file,'utf8').trim();
+const favicon512=[0,1,2,3,4,5].map(i=>read64('assets-final/favicon-512-v34.part'+i)).join('');
 const assetMap={
-  'public/assets/shopee-nav-icon.png':finalAssets.shopee,
-  'public/assets/tiktok-nav-icon.png':finalAssets.tiktok,
-  'public/assets/favicons/favicon-48x48.png':finalAssets.favicon48,
-  'public/assets/favicons/favicon-32x32.png':finalAssets.favicon48,
-  'public/assets/favicons/favicon-16x16.png':finalAssets.favicon48
+  'public/assets/shopee-nav-icon.png':{data:finalAssets.shopee},
+  'public/assets/tiktok-nav-icon.png':{data:finalAssets.tiktok},
+  'public/assets/favicons/favicon-16x16.png':{data:read64('assets-final/favicon-16-v34.b64'),hash:'47f54682ce8e5c8f2e3b177b821462303f17075abfa85eddb6647cb1cf5fea57'},
+  'public/assets/favicons/favicon-32x32.png':{data:read64('assets-final/favicon-32-v34.b64'),hash:'20d607d71e4b11254862e73f0267375f2c83a397e296fc21fa45c18ec26cb02a'},
+  'public/assets/favicons/favicon-48x48.png':{data:finalAssets.favicon48,hash:'01a1363af450451068af82c1fe584e75a5375341bd6ece0bdbe11c6646706e0a'},
+  'public/assets/favicons/favicon-180x180.png':{data:read64('assets-final/favicon-180-v34.b64'),hash:'88d4230ea35d087a0d381fda0ae6dfde3bdfe15d1f5d12c1f7525792b416ae6e'},
+  'public/assets/favicons/favicon-192x192.png':{data:read64('assets-final/favicon-192-v34.b64'),hash:'0e0eee3817bff0cba9e38e31fc9b15015b016cd2ab002d4541a497e88f38f949'},
+  'public/assets/favicons/favicon-512x512.png':{data:favicon512,hash:'f66868fc172d9d967ff92eb8b6c9da6b499739ac78b17562cf69e74cea1f518b'}
 };
-for(const [file,data] of Object.entries(assetMap)){
-  if(!data||data.length<500)throw new Error('final UI asset missing '+file);
-  fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,Buffer.from(data,'base64'));
+let verifiedFavicons=0;
+for(const [file,item] of Object.entries(assetMap)){
+  if(!item.data||item.data.length<500)throw new Error('final UI asset missing '+file);
+  const bin=Buffer.from(item.data,'base64');
+  if(item.hash&&sha(bin)!==item.hash)throw new Error('final UI asset checksum '+file);
+  if(item.hash)verifiedFavicons++;
+  fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,bin);
 }
 html=html.replace('href="/assets/favicons/favicon.ico" sizes="any"','href="/assets/favicons/favicon-48x48.png" sizes="48x48"');
 let marketIconPatched=0;
@@ -120,4 +129,4 @@ const finalSweep=fs.readFileSync('ui-final-sweep-v34.css','utf8');
 if(!finalSweep.includes('FINAL SWEEP #23–#36'))throw new Error('final sweep marker missing');
 fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n'+polishPatch+'\n'+finalSweep+'\n');
 
-console.log('V3.4 verified runtime built',xz.length,'bytes','money',patched,'zero-placeholder',zeroPatched,'forms',formPatched,'market-icons',marketIconPatched,'theme-patches',themeLogicPatched,'FINAL #23-36 active');
+console.log('V3.4 verified runtime built',xz.length,'bytes','money',patched,'zero-placeholder',zeroPatched,'forms',formPatched,'market-icons',marketIconPatched,'theme-patches',themeLogicPatched,'favicons',verifiedFavicons,'FINAL #23-36 active');
