@@ -1,0 +1,14 @@
+const fs=require('fs');const cp=require('child_process');const path=require('path');
+const dir='.deploy-v34';
+const parts=fs.readdirSync(dir).filter(x=>/^payload\.part\d+$/.test(x)).sort();
+if(parts.length!==10)throw new Error(`V3.4 payload incomplete: ${parts.length}/10 parts`);
+const b64=parts.map(x=>fs.readFileSync(path.join(dir,x),'utf8')).join('');
+if(b64.length!==177404)throw new Error(`V3.4 payload length mismatch: ${b64.length}`);
+fs.writeFileSync('payload-v34.tar.xz',Buffer.from(b64,'base64'));
+cp.execFileSync('xz',['-t','payload-v34.tar.xz'],{stdio:'inherit'});
+fs.rmSync('dist',{recursive:true,force:true});fs.mkdirSync('dist',{recursive:true});
+cp.execFileSync('tar',['-xJf','payload-v34.tar.xz','-C','dist'],{stdio:'inherit'});
+for(const f of ['assets-arstore-logo.jpg'])if(fs.existsSync(f)&&!fs.existsSync(path.join('dist',f)))fs.copyFileSync(f,path.join('dist',f));
+if(fs.existsSync('assets'))cp.execFileSync('cp',['-a','assets/.','dist/assets/'],{stdio:'inherit'});
+if(!fs.existsSync('dist/index.html'))throw new Error('V3.4 index.html missing after extraction');
+console.log(`V3.4 payload verified: ${parts.length}/10 parts, ${b64.length} base64 chars`);
