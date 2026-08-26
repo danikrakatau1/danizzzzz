@@ -13,6 +13,7 @@
   let lastScrollY = window.scrollY || 0;
   let compact = false;
   let ticking = false;
+  let pendingPopDirection = '';
 
   function activePage() {
     return document.querySelector('.page.active')?.id?.replace(/^page-/, '') || 'dashboard';
@@ -59,19 +60,23 @@
     window.setTimeout(() => page.classList.remove('ui-nav-enter-forward','ui-nav-enter-back'), 360);
   }
 
+  /* Capture first so app.js sees the correct direction context while it restores
+     the requested page. The page-change event performs the single animation. */
   window.addEventListener('popstate', event => {
     const nextIndex = Number(event.state?.__arIdx);
     const direction = Number.isFinite(nextIndex) && nextIndex < currentIndex ? 'back' : 'forward';
     currentIndex = Number.isFinite(nextIndex) ? nextIndex : Math.max(0,currentIndex - 1);
+    pendingPopDirection = direction;
     root.dataset.navDirection = direction;
     requestAnimationFrame(() => {
       const page = activePage();
       lastPage = page;
-      animateActive(direction);
       restoreScroll(page);
       document.body.classList.remove('ui-edge-swipe-armed');
+      pendingPopDirection = '';
+      root.dataset.navDirection = '';
     });
-  });
+  }, {capture:true});
 
   document.addEventListener('click', event => {
     const nav = event.target.closest('[data-page],[data-go]');
@@ -82,13 +87,13 @@
 
   document.addEventListener('arstore:page-change', event => {
     const page = event.detail?.page || activePage();
+    const direction = pendingPopDirection || root.dataset.navDirection || 'forward';
     if (page !== lastPage) {
-      const isPop = root.dataset.navDirection === 'back';
-      animateActive(isPop ? 'back' : 'forward');
+      animateActive(direction === 'back' ? 'back' : 'forward');
       lastPage = page;
-      if (!isPop) window.setTimeout(() => window.scrollTo({top:0,left:0,behavior:'auto'}), 0);
+      if (!pendingPopDirection && direction !== 'back') window.setTimeout(() => window.scrollTo({top:0,left:0,behavior:'auto'}), 0);
     }
-    root.dataset.navDirection = '';
+    if (!pendingPopDirection) root.dataset.navDirection = '';
     refreshEmptyStates();
   });
 
@@ -187,6 +192,8 @@
     window.addEventListener('pagehide', () => saveScroll(activePage(), window.scrollY || 0), {passive:true});
     window.addEventListener('pageshow', () => {
       syncTheme();
+      pendingPopDirection = '';
+      root.dataset.navDirection = '';
       document.body.classList.remove('ui-edge-swipe-armed');
       const page = activePage();
       lastPage = page;
