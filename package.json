@@ -2,5 +2,5 @@
   "name":"arstore-tools-v3",
   "version":"3.4.0-final-production-regression",
   "private":true,
-  "scripts":{"build":"node build-v34.js && node append-mobile-hotfix-v34.js && node append-final-sweep-v37-60.js && node append-ios-history-fix-v34.js && node append-fast-favicon-v5.js","dev":"npx vercel dev"}
+  "scripts":{"build":"node build-v34.js && node append-mobile-hotfix-v34.js && node append-final-sweep-v37-60.js && node append-ios-nav-authority-v61-69-fast.js && node append-fast-favicon-v5.js","dev":"npx vercel dev"}
 }
