@@ -12,4 +12,26 @@ fs.writeFileSync('payload-v34.tar.xz',xz);cp.execFileSync('xz',['-t','payload-v3
 fs.rmSync('public',{recursive:true,force:true});fs.mkdirSync('public',{recursive:true});cp.execFileSync('tar',['-xJf','payload-v34.tar.xz','-C','public'],{stdio:'inherit'});
 const src='assets/arstore-emblem-transparent.png',dst='public/assets/arstore-emblem-transparent.png';fs.mkdirSync(path.dirname(dst),{recursive:true});fs.copyFileSync(src,dst);
 if(sha(fs.readFileSync(dst))!=='3ecfcfe7a95283c15669f0aeed013d3990b1d0a1bc9172773566b486f0d2488d')throw new Error('emblem checksum');
-console.log('V3.4 verified runtime built',xz.length,'bytes');
+
+// V3.4 UI-THEME-FIXED overlay only. Master fee/formula/DB payload stays byte-identical above.
+const htmlPath='public/index.html';
+let html=fs.readFileSync(htmlPath,'utf8');
+const moneyIds=[
+  'shopeeRoasRevenue','shopeeRoasAdSpend','shopeeRoasCogs','shopeeRoasMarketplaceFee','shopeeRoasOtherCost',
+  'shopeePriceHpp','shopeePricePacking','shopeePriceOps','shopeePriceAds','shopeePriceExtra','shopeePriceFixedFee','shopeePriceTargetProfit',
+  'tiktokRoasRevenue','tiktokRoasAdSpend','tiktokRoasCogs','tiktokRoasOtherCost','tiktokRoasFixedFee',
+  'tiktokPriceHpp','tiktokPricePacking','tiktokPriceOps','tiktokPriceAds','tiktokPriceExtra','tiktokPriceFixedFee','tiktokPriceTargetProfit',
+  'filterPriceMin','filterPriceMax'
+];
+let patched=0;
+for(const id of moneyIds){
+  const re=new RegExp('(<input\\s+id="'+id+'"[^>]*\\bstep=")(?:1000|100)("[^>]*>)','g');
+  html=html.replace(re,(m,a,b)=>{patched++;return a+'1'+b;});
+}
+if(patched!==moneyIds.length)throw new Error('UI money step patch count '+patched+' / '+moneyIds.length);
+fs.writeFileSync(htmlPath,html);
+const cssPatch=fs.readFileSync('ui-theme-patch.css','utf8');
+if(!cssPatch.includes('V3.4 FINAL THEME + FORM CONSISTENCY PACK'))throw new Error('UI theme patch marker missing');
+fs.appendFileSync('public/css/app.css','\n'+cssPatch+'\n');
+
+console.log('V3.4 verified runtime built',xz.length,'bytes','UI patch',patched,'inputs');
