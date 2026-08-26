@@ -2,5 +2,5 @@
   "name":"arstore-tools-v3",
   "version":"3.4.0-final-production-regression",
   "private":true,
-  "scripts":{"build":"node build-v34.js && node append-mobile-hotfix-v34.js","dev":"npx vercel dev"}
+  "scripts":{"build":"node build-v34.js && node append-mobile-hotfix-v34.js && node append-final-sweep-v37-60.js","dev":"npx vercel dev"}
 }
