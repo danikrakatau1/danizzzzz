@@ -1,0 +1,4 @@
+/* ARSTORE V259 — iOS sidebar overlay fail-safe */
+html[data-ar-platform="ios"] .sidebar-overlay:not(.show):not(.active):not(.visible){opacity:0!important;visibility:hidden!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:transparent!important}
+html[data-ar-platform="ios"] .sidebar:not(.open):not(.active):not(.is-open){pointer-events:none!important;visibility:hidden!important;transform:translate3d(-110%,0,0)!important}
+html[data-ar-platform="ios"] .sidebar.open,html[data-ar-platform="ios"] .sidebar.active,html[data-ar-platform="ios"] .sidebar.is-open{pointer-events:auto!important;visibility:visible!important}
