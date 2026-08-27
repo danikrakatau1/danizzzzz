@@ -1,0 +1,11 @@
+const fs=require('fs'),path=require('path');
+const ROOT=process.cwd(),PUB=path.join(ROOT,'public');
+const css='ui-ios-light-icons-v260.css';
+const src=path.join(ROOT,css),dst=path.join(PUB,'css',css);
+if(!fs.existsSync(src))throw new Error('V260 missing '+css);
+fs.copyFileSync(src,dst);
+const htmlPath=path.join(PUB,'index.html');
+let html=fs.readFileSync(htmlPath,'utf8');
+if(!html.includes(css))html=html.replace('</head>',`<link rel="stylesheet" href="css/${css}?v=260">\n</head>`);
+fs.writeFileSync(htmlPath,html);
+console.log('IOS LIGHT ICONS V260 APPLIED — icon contrast/visibility only; dark/charcoal/oled + engine untouched');
