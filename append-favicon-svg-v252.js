@@ -1,0 +1,11 @@
+const fs=require('fs'),path=require('path');
+const ROOT=process.cwd(),PUB=path.join(ROOT,'public');
+const src=path.join(ROOT,'favicon.svg'),dst=path.join(PUB,'favicon.svg');
+if(!fs.existsSync(src)) throw new Error('V252 missing root favicon.svg');
+fs.copyFileSync(src,dst);
+const htmlPath=path.join(PUB,'index.html');
+let html=fs.readFileSync(htmlPath,'utf8');
+html=html.replace(/<link[^>]+rel=["']icon["'][^>]*type=["']image\/svg\+xml["'][^>]*>/gi,'');
+html=html.replace(/<head([^>]*)>/i,'<head$1>\n<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=252">');
+fs.writeFileSync(htmlPath,html);
+console.log('FAVICON SVG V252 PASS · colored vector primary · PNG/ICO fallback retained · UI/logo untouched');
