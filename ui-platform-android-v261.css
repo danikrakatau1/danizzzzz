@@ -1,0 +1,14 @@
+/* ARSTORE V261 — Android Chrome/Chromium tactile and viewport layer */
+html[data-ar-platform="android"]{--ar261-fast:125ms;--ar261-med:210ms;--ar261-slow:360ms}
+html[data-ar-platform="android"] button:active,
+html[data-ar-platform="android"] [role="button"]:active,
+html[data-ar-platform="android"] .nav-item:active,
+html[data-ar-platform="android"] .tool-card:active{transform:scale(.985)}
+html[data-ar-platform="android"] .ar261-ripple{position:relative;overflow:hidden}
+html[data-ar-platform="android"] .ar261-ripple::after{content:"";position:absolute;width:10px;height:10px;left:var(--ar261-rx,50%);top:var(--ar261-ry,50%);border-radius:999px;background:currentColor;opacity:0;transform:translate(-50%,-50%) scale(0);pointer-events:none}
+html[data-ar-platform="android"] .ar261-ripple.ar261-rippling::after{animation:ar261-ripple .52s ease-out}
+@keyframes ar261-ripple{0%{opacity:.14;transform:translate(-50%,-50%) scale(0)}100%{opacity:0;transform:translate(-50%,-50%) scale(24)}}
+html[data-ar-platform="android"] .topbar{padding-top:max(0px,env(safe-area-inset-top))}
+html[data-ar-platform="android"] .bottom-nav{padding-bottom:max(0px,env(safe-area-inset-bottom))}
+html[data-ar-platform="android"][data-ar-keyboard="open"] .bottom-nav{transform:translateY(110%);pointer-events:none}
+@media (max-width:480px){html[data-ar-platform="android"] .tool-card,html[data-ar-platform="android"] button{touch-action:manipulation}}
