@@ -1,0 +1,37 @@
+/* ARSTORE V261 — iPhone/iPad navigation, safe-area and Safari hardening */
+html[data-ar-platform="ios"]{
+ --ar261-drawer-w:min(86vw,340px);--ar261-glow:rgba(109,74,255,.16);
+}
+html[data-ar-platform="ios"] .sidebar{
+ transform:translate3d(calc((-100%)*(1 - var(--ar261-drawer-progress))),0,0);
+ backface-visibility:hidden;-webkit-backface-visibility:hidden;contain:paint;
+}
+html[data-ar-platform="ios"] .sidebar-overlay{
+ opacity:calc(var(--ar261-drawer-progress)*.82);
+ pointer-events:none;
+}
+html[data-ar-platform="ios"].ar261-drawer-open .sidebar-overlay{pointer-events:auto}
+html[data-ar-platform="ios"].ar261-gesture .main-content{
+ transform:translate3d(calc(var(--ar261-drawer-progress)*10px),0,0) scale(calc(1 - var(--ar261-drawer-progress)*.006));
+ transform-origin:center left;
+}
+html[data-ar-platform="ios"] .sidebar{box-shadow:calc(var(--ar261-drawer-progress)*16px) 0 36px rgba(15,23,42,calc(var(--ar261-drawer-progress)*.18))}
+html[data-ar-platform="ios"] .topbar{padding-top:max(0px,env(safe-area-inset-top));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+html[data-ar-platform="ios"] .sidebar{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+html[data-ar-platform="ios"][data-theme="light"] .mobile-header-brand,
+html[data-ar-platform="ios"][data-theme="light"] .sidebar .brand,
+html[data-ar-platform="ios"][data-theme="light"] .sidebar-brand{
+ background:#202124!important;border:1px solid rgba(15,23,42,.16)!important;border-radius:13px!important;
+ box-shadow:0 4px 14px rgba(15,23,42,.11)!important;isolation:isolate!important;
+}
+html[data-ar-platform="ios"][data-theme="light"] .mobile-header-brand img,
+html[data-ar-platform="ios"][data-theme="light"] .sidebar .brand img,
+html[data-ar-platform="ios"][data-theme="light"] .sidebar-brand img{
+ opacity:1!important;visibility:visible!important;filter:none!important;mix-blend-mode:normal!important;
+ object-fit:contain!important;-webkit-transform:translateZ(0);transform:translateZ(0);backface-visibility:hidden;
+}
+html[data-ar-platform="ios"] input,html[data-ar-platform="ios"] select,html[data-ar-platform="ios"] textarea{font-size:max(16px,1em)}
+html[data-ar-platform="ios"][data-ar-keyboard="open"] .bottom-nav{transform:translateY(110%);pointer-events:none}
+@media (orientation:landscape) and (max-height:520px){
+ html[data-ar-platform="ios"]{--ar261-drawer-w:min(72vw,330px)}
+}
