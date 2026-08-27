@@ -1,0 +1,62 @@
+/* ARSTORE V261 — cross-device premium experience system; UI/UX only */
+:root{
+ --ar261-fast:140ms;--ar261-med:240ms;--ar261-slow:420ms;--ar261-xslow:620ms;
+ --ar261-ease:cubic-bezier(.22,.72,.2,1);--ar261-spring:cubic-bezier(.16,1,.3,1);
+ --ar261-rise:8px;--ar261-glow:rgba(109,74,255,.20);--ar261-border:rgba(148,163,184,.24);
+ --ar261-drawer-progress:0;--ar261-scroll-progress:0;
+}
+html{scroll-behavior:smooth}
+body{transition:background-color var(--ar261-med) var(--ar261-ease),color var(--ar261-med) var(--ar261-ease)}
+.topbar,.sidebar,.panel,.card,.tool-card,.icon-btn,button,[role="button"],input,select,textarea{
+ transition-property:background-color,border-color,color,box-shadow,transform,opacity;
+ transition-duration:var(--ar261-med);transition-timing-function:var(--ar261-ease);
+}
+.ar261-reveal{opacity:0;transform:translate3d(0,var(--ar261-rise),0);transition:opacity var(--ar261-slow) var(--ar261-ease),transform var(--ar261-slow) var(--ar261-spring);transition-delay:calc(min(var(--ar261-i,0),7)*28ms)}
+.ar261-reveal.ar261-in{opacity:1;transform:none}
+.ar261-route-in .main-content{animation:ar261-route-in var(--ar261-slow) var(--ar261-spring) both}
+@keyframes ar261-route-in{from{opacity:.74;transform:translate3d(0,6px,0) scale(.994)}to{opacity:1;transform:none}}
+.ar261-value-update{animation:ar261-value .44s var(--ar261-spring)}
+@keyframes ar261-value{0%{filter:brightness(1);transform:none}35%{filter:brightness(1.14);transform:translateY(-1px)}100%{filter:brightness(1);transform:none}}
+.ar261-success{animation:ar261-success .6s var(--ar261-spring)}
+@keyframes ar261-success{0%{box-shadow:0 0 0 0 rgba(34,197,94,.28)}100%{box-shadow:0 0 0 16px rgba(34,197,94,0)}}
+.ar261-warning{animation:ar261-warning 1s ease-out 1}
+@keyframes ar261-warning{50%{box-shadow:0 0 0 2px rgba(245,158,11,.24)}}
+.ar261-invalid{animation:ar261-shake .26s ease-out}
+@keyframes ar261-shake{25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}}
+.ar261-pointer{position:relative;isolation:isolate}
+.ar261-pointer::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(240px circle at var(--ar261-x,50%) var(--ar261-y,50%),var(--ar261-glow),transparent 62%);transition:opacity var(--ar261-med)}
+.ar261-pointer:hover::after{opacity:1}
+.sidebar{will-change:transform}
+.sidebar-overlay{will-change:opacity}
+html.ar261-gesture .sidebar{transition:none!important}
+html.ar261-gesture .sidebar-overlay{transition:none!important}
+html.ar261-gesture .main-content{transition:none!important}
+html.ar261-low *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html.ar261-low .ar261-pointer::after{display:none}
+html.ar261-scrolling .ar261-ambient{animation-play-state:paused!important;opacity:.55!important}
+.ar261-active-pulse{position:relative}
+.ar261-active-pulse::before{content:"";position:absolute;left:0;top:20%;bottom:20%;width:2px;border-radius:2px;background:currentColor;opacity:.35;animation:ar261-breathe 2.8s ease-in-out infinite}
+@keyframes ar261-breathe{50%{opacity:.7;transform:scaleY(1.12)}}
+html.ar261-theme-changing .topbar,html.ar261-theme-changing .sidebar,html.ar261-theme-changing .card,html.ar261-theme-changing .panel{transition-duration:360ms}
+html[data-theme="light"],body.light,body.theme-light{
+ --ar261-glow:rgba(109,74,255,.13);--ar261-border:#cfd7e6;
+}
+html[data-theme="light"] .topbar,body.light .topbar,body.theme-light .topbar{
+ background:rgba(255,255,255,.985)!important;border-bottom:1px solid #cfd7e6!important;
+ box-shadow:0 1px 0 rgba(15,23,42,.04),0 8px 22px rgba(15,23,42,.05)!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+html[data-theme="light"] .nav-icon,html[data-theme="light"] .sidebar svg,
+body.light .nav-icon,body.light .sidebar svg,body.theme-light .nav-icon,body.theme-light .sidebar svg{
+ opacity:1!important;visibility:visible!important;color:#475569!important;filter:none!important;mix-blend-mode:normal!important;
+}
+html[data-theme="light"] .nav-item.active .nav-icon,html[data-theme="light"] .nav-item.active svg,
+body.light .nav-item.active .nav-icon,body.light .nav-item.active svg{color:#6d4aff!important}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+ .ar261-reveal{opacity:1!important;transform:none!important}
+}
+@media print{
+ *,*::before,*::after{animation:none!important;transition:none!important;filter:none!important;backdrop-filter:none!important}
+ .sidebar-overlay{display:none!important}
+}
