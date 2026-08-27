@@ -1,0 +1,13 @@
+/* ARSTORE V258 — Android compatibility + motion layer */
+html[data-ar-platform="android"]{--m-page:300ms;--m-fast:130ms;--m-med:190ms;--m-lift:1px}
+html[data-ar-platform="android"] body{min-height:100dvh;overscroll-behavior-y:none}
+html[data-ar-platform="android"] .sidebar{height:100dvh;max-height:100dvh;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+html[data-ar-platform="android"] .sidebar-nav{overscroll-behavior:contain;touch-action:pan-y}
+html[data-ar-platform="android"] .main-content{padding-bottom:calc(82px + env(safe-area-inset-bottom))}
+html[data-ar-platform="android"] .bottom-nav,html[data-ar-platform="android"] .mobile-bottom-nav{padding-bottom:max(6px,env(safe-area-inset-bottom))}
+html[data-ar-platform="android"] button,html[data-ar-platform="android"] [role="button"],html[data-ar-platform="android"] .nav-item{touch-action:manipulation}
+html[data-ar-platform="android"] .ar-touch-ripple{position:relative;overflow:hidden}.ar-touch-ripple::before{content:"";position:absolute;left:var(--ripple-x,50%);top:var(--ripple-y,50%);width:10px;height:10px;border-radius:50%;background:currentColor;opacity:0;transform:translate(-50%,-50%) scale(0);pointer-events:none}.ar-touch-ripple.ar-rippling::before{animation:arAndroidRipple 420ms ease-out}@keyframes arAndroidRipple{0%{opacity:.10;transform:translate(-50%,-50%) scale(0)}100%{opacity:0;transform:translate(-50%,-50%) scale(18)}}
+html[data-ar-platform="android"] .ar-android-back-enter{animation:arAndroidBack 260ms cubic-bezier(.2,.8,.2,1) both}@keyframes arAndroidBack{from{opacity:.94;transform:translate3d(-8px,0,0)}to{opacity:1;transform:none}}
+html[data-ar-platform="android"][data-ar-keyboard="open"] .floating-action,html[data-ar-platform="android"][data-ar-keyboard="open"] .fab{transform:translateY(-8px)}
+html[data-ar-platform="android"][data-ar-performance="low"] .sidebar-overlay{backdrop-filter:none!important}
+@media (orientation:landscape) and (max-height:520px){html[data-ar-platform="android"] .main-content{padding-bottom:max(18px,env(safe-area-inset-bottom))}}
