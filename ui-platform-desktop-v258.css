@@ -1,0 +1,8 @@
+/* ARSTORE V258 — Desktop/PC compatibility + premium pointer layer */
+html[data-ar-platform="desktop"]{--m-page:340ms;--m-fast:145ms;--m-med:220ms;--m-lift:2px}
+html[data-ar-platform="desktop"] .sidebar{transition:width var(--m-page) var(--m-spring),transform var(--m-page) var(--m-spring),box-shadow var(--m-med)}
+html[data-ar-platform="desktop"] .nav-item{min-height:42px}
+@media (hover:hover) and (pointer:fine){html[data-ar-platform="desktop"] .ar-pointer-card{--ar-x:50%;--ar-y:50%}html[data-ar-platform="desktop"] .icon-btn:hover svg,html[data-ar-platform="desktop"] .ghost-btn:hover svg{transform:translateY(-1px)}html[data-ar-platform="desktop"] .icon-btn svg,html[data-ar-platform="desktop"] .ghost-btn svg{transition:transform var(--m-fast) var(--m-spring)}html[data-ar-platform="desktop"] .brand-logo-orbit:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(15,23,42,.12)}}
+html[data-ar-platform="desktop"] .ar-key-hint{opacity:0;transform:translateY(2px);transition:opacity var(--m-fast),transform var(--m-fast)}html[data-ar-platform="desktop"] :focus-visible .ar-key-hint,html[data-ar-platform="desktop"] .ar-key-hint.is-visible{opacity:1;transform:none}
+html[data-ar-platform="desktop"] .main-content{transition:margin-left var(--m-page) var(--m-spring),padding var(--m-med) var(--m-ease)}
+@media (min-width:1280px){html[data-ar-platform="desktop"] .dashboard-grid,html[data-ar-platform="desktop"] .bento-tools{transition:grid-template-columns var(--m-page) var(--m-ease),gap var(--m-med)}}
