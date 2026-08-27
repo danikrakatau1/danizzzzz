@@ -1,0 +1,15 @@
+/* ARSTORE V258 — iOS / Safari compatibility + motion layer */
+html[data-ar-platform="ios"]{--m-page:320ms;--m-fast:135ms;--m-med:205ms;--m-lift:1px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html[data-ar-platform="ios"] body{min-height:100dvh;overscroll-behavior-y:none;-webkit-font-smoothing:antialiased}
+html[data-ar-platform="ios"] .sidebar{height:100dvh;max-height:100dvh;padding-bottom:max(12px,env(safe-area-inset-bottom));transform:translateZ(0);backface-visibility:hidden}
+html[data-ar-platform="ios"] .sidebar-nav{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+html[data-ar-platform="ios"] .topbar{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));transform:translateZ(0)}
+html[data-ar-platform="ios"] .main-content{padding-bottom:calc(88px + env(safe-area-inset-bottom));padding-left:max(var(--content-pad,0px),env(safe-area-inset-left));padding-right:max(var(--content-pad,0px),env(safe-area-inset-right))}
+html[data-ar-platform="ios"] .bottom-nav,html[data-ar-platform="ios"] .mobile-bottom-nav{padding-bottom:max(8px,env(safe-area-inset-bottom));transform:translateZ(0)}
+html[data-ar-platform="ios"] input,html[data-ar-platform="ios"] select,html[data-ar-platform="ios"] textarea{font-size:max(16px,1em)}
+html[data-ar-platform="ios"] .ar-ios-back-enter{animation:arIosBackIn 300ms cubic-bezier(.2,.8,.2,1) both}@keyframes arIosBackIn{from{opacity:.94;transform:translate3d(-10px,0,0)}to{opacity:1;transform:none}}
+html[data-ar-platform="ios"] .ar-ios-forward-enter{animation:arIosForwardIn 300ms cubic-bezier(.2,.8,.2,1) both}@keyframes arIosForwardIn{from{opacity:.94;transform:translate3d(10px,0,0)}to{opacity:1;transform:none}}
+html[data-ar-platform="ios"] .sidebar-overlay{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+html[data-ar-platform="ios"][data-ar-performance="low"] .sidebar-overlay{backdrop-filter:none;-webkit-backdrop-filter:none}
+@supports(-webkit-touch-callout:none){html[data-ar-platform="ios"] .page,html[data-ar-platform="ios"] .main-content{min-height:calc(100dvh - var(--topbar-h,0px))}}
+@media (orientation:landscape) and (max-height:520px){html[data-ar-platform="ios"] .topbar{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}html[data-ar-platform="ios"] .main-content{padding-bottom:max(18px,env(safe-area-inset-bottom))}}
