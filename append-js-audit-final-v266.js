@@ -68,8 +68,7 @@ const checks=[
  ['Smart History owns history API',history70.includes('history.pushState=function')&&history70.includes('history.replaceState=function')],
  ['Product Center marker',product71.includes('ARSTORE Product Center V71 FULL FUNCTIONAL')],
  ['Product Center does not own browser history',!product71.includes('history.pushState')&&!product71.includes('history.replaceState')],
- ['Product Center does not install touch navigation',!product71.includes("addEventListener('touchstart'")&&!product71.includes("addEventListener('touchmove'")],
- ['engine/data untouched by final audit',!fs.readFileSync(__filename,'utf8').includes('shopee-fee-db-chunk')&&!fs.readFileSync(__filename,'utf8').includes('ARSTORE_STEP02_FEE_ENGINE.calculate(')]
+ ['Product Center does not install touch navigation',!product71.includes("addEventListener('touchstart'")&&!product71.includes("addEventListener('touchmove'")]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([name])=>name);
 if(failed.length)throw new Error('V266 JS FINAL AUDIT failed: '+failed.join(', '));
