@@ -1,0 +1,8 @@
+/* ARSTORE V264 — iOS navigation visual cleanup; UI only */
+html[data-ar-platform="ios"] #sidebar{will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+html[data-ar-platform="ios"] #sidebarOverlay{will-change:opacity,backdrop-filter;-webkit-backface-visibility:hidden}
+html[data-ar-platform="ios"].ar264-gesture #sidebar,html[data-ar-platform="ios"].ar264-gesture #sidebarOverlay{transition:none!important}
+html[data-ar-platform="ios"] #mobileMenuBtn{touch-action:manipulation;pointer-events:auto!important}
+html[data-ar-platform="ios"] #sidebar [data-nav-toggle],html[data-ar-platform="ios"] #sidebar [data-page]{touch-action:manipulation}
+html[data-ar-platform="ios"] #sidebarOverlay:not(.show){visibility:hidden!important;opacity:0!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+@media (prefers-reduced-motion:reduce){html[data-ar-platform="ios"] #sidebar,html[data-ar-platform="ios"] #sidebarOverlay{transition-duration:.01ms!important}}
