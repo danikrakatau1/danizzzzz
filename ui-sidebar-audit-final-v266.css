@@ -15,6 +15,16 @@
   scrollbar-gutter:stable!important;
   padding-inline-end:12px!important;
   padding-bottom:max(20px,env(safe-area-inset-bottom,0px))!important;
+  scroll-padding-bottom:max(20px,env(safe-area-inset-bottom,0px))!important;
+}
+
+/* Old V3 reachability workaround added another 72–92px pseudo spacer on top of
+   120–150px bottom padding. The sidebar is now a flex column with nav as the
+   dedicated scroll owner, so that extra blank tail is no longer needed. */
+.sidebar-nav::after{
+  content:none!important;
+  display:none!important;
+  height:0!important;
 }
 
 /* Never clip the whole interactive row. Keep the row/focus surface intact and
@@ -57,6 +67,7 @@
     -webkit-overflow-scrolling:touch;
     padding-inline-end:max(12px,env(safe-area-inset-right,0px))!important;
     padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;
+    scroll-padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;
   }
 }
 
