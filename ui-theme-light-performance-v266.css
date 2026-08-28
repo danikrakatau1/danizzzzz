@@ -1,0 +1,51 @@
+/* ARSTORE V266 B2.6 — light-path theme transition performance hardening */
+:root{
+  --ar266-light-path:220ms;
+  --ar266-light-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Light <-> dark-family changes repaint far more pixels than dark-family swaps.
+   Keep the expensive animation on large surfaces only and retire mass shadow animation. */
+html.ar266-light-path.ar266-theme-transitioning body,
+html.ar266-light-path.ar266-theme-transitioning .app-shell,
+html.ar266-light-path.ar266-theme-transitioning .main-content,
+html.ar266-light-path.ar266-theme-transitioning .sidebar,
+html.ar266-light-path.ar266-theme-transitioning .topbar,
+html.ar266-light-path.ar266-theme-transitioning .v3-hero,
+html.ar266-light-path.ar266-theme-transitioning .v3-status-card,
+html.ar266-light-path.ar266-theme-transitioning .v3-calc-card,
+html.ar266-light-path.ar266-theme-transitioning .v3-result-card,
+html.ar266-light-path.ar266-theme-transitioning .settings-card,
+html.ar266-light-path.ar266-theme-transitioning .database-market-block,
+html.ar266-light-path.ar266-theme-transitioning .product-workspace-panel{
+  transition-property:background-color,border-color,color!important;
+  transition-duration:var(--ar266-light-path)!important;
+  transition-timing-function:var(--ar266-light-ease)!important;
+}
+
+/* Small controls settling instantly is cheaper and prevents hundreds of simultaneous paints. */
+html.ar266-light-path.ar266-theme-transitioning button:not(.theme-capsule-option):not(.theme-capsule-toggle),
+html.ar266-light-path.ar266-theme-transitioning input,
+html.ar266-light-path.ar266-theme-transitioning select,
+html.ar266-light-path.ar266-theme-transitioning textarea,
+html.ar266-light-path.ar266-theme-transitioning .nav-item,
+html.ar266-light-path.ar266-theme-transitioning .nav-leaf,
+html.ar266-light-path.ar266-theme-transitioning .sidebar-footer,
+html.ar266-light-path.ar266-theme-transitioning .brand{
+  transition-property:color,background-color,border-color!important;
+  transition-duration:120ms!important;
+  transition-timing-function:ease-out!important;
+}
+
+/* Do not tween shadows across the whole UI during Light transitions. */
+html.ar266-light-path.ar266-theme-transitioning *:not(.theme-capsule-indicator):not(.theme-capsule-shell){
+  transition-delay:0s!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html.ar266-light-path.ar266-theme-transitioning body,
+  html.ar266-light-path.ar266-theme-transitioning .app-shell,
+  html.ar266-light-path.ar266-theme-transitioning .main-content,
+  html.ar266-light-path.ar266-theme-transitioning .sidebar,
+  html.ar266-light-path.ar266-theme-transitioning .topbar{transition-duration:1ms!important}
+}
