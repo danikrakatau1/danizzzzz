@@ -1,3 +1,116 @@
+function parseJsonish(value) {
+  if (typeof value !== 'string') return value;
+  let text = value.trim();
+  if (!text) return value;
+  if (text.startsWith('```')) {
+    text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  }
+  if (!((text.startsWith('{') && text.endsWith('}')) || (text.startsWith('[') && text.endsWith(']')))) return value;
+  try { return JSON.parse(text); } catch (_) { return value; }
+}
+
+function productLike(item) {
+  if (!item || typeof item !== 'object' || Array.isArray(item)) return false;
+  const source = item.data || item.item || item.product || item;
+  const keys = [
+    'pid','productId','itemId','item_id','productName','title','itemName','name',
+    'price','minPrice','maxPrice','sold','estimateSold','historicalSold','payment',
+    'rating','ratings','productUrl','imageUrl','shopId'
+  ];
+  return keys.some(key => source?.[key] !== undefined && source?.[key] !== null && source?.[key] !== '');
+}
+
+function normalizeProviderPayload(input) {
+  const visited = new WeakSet();
+  const candidates = [];
+  const preferredArrays = ['products','productList','items','list','records','rows','resultList','dataList'];
+  const wrapperKeys = ['structuredContent','data','result','output','response','body','content','payload','text','contentText'];
+
+  function addArray(arr, path, bonus = 0) {
+    if (!Array.isArray(arr) || !arr.length) return;
+    const objects = arr.filter(x => x && typeof x === 'object' && !Array.isArray(x));
+    if (!objects.length) return;
+    const matches = objects.filter(productLike).length;
+    candidates.push({ arr, path, score: matches * 1000 + objects.length + bonus });
+  }
+
+  function visit(raw, depth = 0, path = 'root') {
+    if (raw === null || raw === undefined || depth > 14) return;
+    const node = parseJsonish(raw);
+    if (typeof node !== 'object' || node === null) return;
+    if (visited.has(node)) return;
+    visited.add(node);
+
+    if (Array.isArray(node)) {
+      addArray(node, path);
+      node.forEach((item, i) => visit(item, depth + 1, `${path}[${i}]`));
+      return;
+    }
+
+    for (const key of preferredArrays) {
+      if (Array.isArray(node[key])) addArray(node[key], `${path}.${key}`, key === 'products' ? 100000 : 10000);
+    }
+
+    for (const key of wrapperKeys) {
+      if (node[key] !== undefined) visit(node[key], depth + 1, `${path}.${key}`);
+    }
+
+    Object.entries(node).forEach(([key, value]) => {
+      if (!preferredArrays.includes(key) && !wrapperKeys.includes(key)) visit(value, depth + 1, `${path}.${key}`);
+    });
+  }
+
+  visit(input);
+  candidates.sort((a, b) => b.score - a.score);
+  const best = candidates[0];
+  if (!best || !best.arr.some(productLike)) return null;
+
+  const metaSources = [];
+  let cursor = parseJsonish(input);
+  for (let i = 0; i < 8 && cursor && typeof cursor === 'object' && !Array.isArray(cursor); i += 1) {
+    metaSources.push(cursor);
+    const next = ['data','structuredContent','result','output','response','payload']
+      .map(key => parseJsonish(cursor[key]))
+      .find(value => value && typeof value === 'object' && !Array.isArray(value));
+    if (!next || next === cursor) break;
+    cursor = next;
+  }
+
+  const pick = (...keys) => {
+    for (const source of metaSources) {
+      for (const key of keys) {
+        if (source?.[key] !== undefined && source?.[key] !== null && source?.[key] !== '') return source[key];
+      }
+    }
+    return undefined;
+  };
+
+  return {
+    products: best.arr,
+    total: pick('total','totalSize','totalCount','count'),
+    totalSize: pick('totalSize','total','totalCount','count'),
+    page: pick('page','pageIndex'),
+    pageSize: pick('pageSize','limit'),
+    dataSnapshotMonth: pick('dataSnapshotMonth'),
+    statTime: pick('statTime','statisticsTime'),
+    sourceType: pick('sourceType'),
+    sourceTool: pick('sourceTool','toolName'),
+    _arstoreNormalized: true,
+    _arstoreProductPath: best.path
+  };
+}
+
+function providerBusinessError(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return '';
+  const code = data.code ?? data.errcode ?? data.status;
+  const msg = String(data.msg || data.message || data.errmsg || '').trim();
+  const codeText = String(code ?? '').toLowerCase();
+  const success = code === undefined || code === null || code === '' || code === 0 || code === 1 || code === 200 || codeText === '0' || codeText === '1' || codeText === '200' || codeText === 'ok' || codeText === 'success';
+  if (!success && msg) return msg;
+  if (/^(error|failed|fail|unauthorized|forbidden)$/i.test(msg)) return msg;
+  return '';
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -105,7 +218,25 @@ module.exports = async function handler(req, res) {
       }
 
       if (upstream.ok) {
-        res.status(200).json(data || {});
+        const normalized = normalizeProviderPayload(data);
+        if (normalized) {
+          res.status(200).json(normalized);
+          return;
+        }
+
+        const businessError = providerBusinessError(data);
+        if (businessError) {
+          res.status(502).json({ message: `Nexscope: ${businessError}` });
+          return;
+        }
+
+        const topKeys = data && typeof data === 'object' && !Array.isArray(data) ? Object.keys(data).slice(0, 12) : [];
+        const nested = parseJsonish(data?.data);
+        const dataKeys = nested && typeof nested === 'object' && !Array.isArray(nested) ? Object.keys(nested).slice(0, 12) : [];
+        res.status(502).json({
+          message: `Nexscope merespons tetapi listing produk belum ditemukan.${dataKeys.length ? ` Struktur data: ${dataKeys.join(', ')}.` : ''}`,
+          providerShape: { topKeys, dataKeys }
+        });
         return;
       }
 
