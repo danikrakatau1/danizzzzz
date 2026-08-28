@@ -1,0 +1,10 @@
+const fs=require('fs'),path=require('path');
+const root=__dirname,out=path.join(root,'public');if(!fs.existsSync(out))throw new Error('public/ missing; run base build first');
+fs.mkdirSync(path.join(out,'css'),{recursive:true});fs.mkdirSync(path.join(out,'js'),{recursive:true});
+for(const f of ['ui-ios-navigation-state-v262.css'])fs.copyFileSync(path.join(root,f),path.join(out,'css',f));
+for(const f of ['ui-ios-navigation-state-v262.js'])fs.copyFileSync(path.join(root,f),path.join(out,'js',f));
+const index=path.join(out,'index.html');let html=fs.readFileSync(index,'utf8');
+if(!html.includes('ui-ios-navigation-state-v262.css'))html=html.replace('</head>','<link rel="stylesheet" href="css/ui-ios-navigation-state-v262.css?v=262">\n</head>');
+if(!html.includes('ui-ios-navigation-state-v262.js'))html=html.replace('</body>','<script src="js/ui-ios-navigation-state-v262.js?v=262" defer></script>\n</body>');
+fs.writeFileSync(index,html);
+console.log('IOS NAVIGATION STATE V262 APPLIED — hamburger + accordion + overlay + right-swipe state authority; UI/navigation only; fee/formula/database payload untouched');
