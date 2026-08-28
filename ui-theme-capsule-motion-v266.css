@@ -1,0 +1,74 @@
+/* ARSTORE V266 B2.2 — theme capsule open/close motion hardening
+   Presentation only. Keeps V200 as the single capsule behavior owner. */
+:root{
+  --ar266-capsule-open:340ms;
+  --ar266-capsule-close:360ms;
+  --ar266-capsule-ease:cubic-bezier(.22,1,.36,1);
+}
+
+.theme-capsule-shell{
+  will-change:width,border-radius;
+  transition:
+    width var(--ar266-capsule-open) var(--ar266-capsule-ease),
+    border-radius var(--ar266-capsule-open) var(--ar266-capsule-ease),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease!important;
+}
+.theme-action-capsule.is-closing .theme-capsule-shell{
+  width:46px!important;
+  border-radius:15px!important;
+  transition-duration:var(--ar266-capsule-close),var(--ar266-capsule-close),260ms,260ms,260ms!important;
+}
+
+/* V200 used visibility:hidden immediately after .is-open disappeared, which cut
+   off the exit animation. Keep the option strip visible only while opening/open
+   or while the explicit closing phase is running. */
+.theme-action-capsule.is-open .theme-capsule-options,
+.theme-action-capsule.is-closing .theme-capsule-options{
+  visibility:visible!important;
+}
+.theme-capsule-options{
+  will-change:opacity,transform;
+  transition:
+    opacity 220ms ease,
+    transform var(--ar266-capsule-open) var(--ar266-capsule-ease)!important;
+}
+.theme-action-capsule.is-open .theme-capsule-options{
+  opacity:1!important;
+  transform:translate3d(0,0,0) scale(1)!important;
+  pointer-events:auto!important;
+  transition-delay:55ms!important;
+}
+.theme-action-capsule.is-closing .theme-capsule-options{
+  opacity:0!important;
+  transform:translate3d(8px,0,0) scale(.985)!important;
+  pointer-events:none!important;
+  transition-delay:0s!important;
+}
+
+.theme-capsule-toggle .theme-gear{
+  will-change:transform;
+  transition:transform var(--ar266-capsule-open) var(--ar266-capsule-ease)!important;
+}
+.theme-action-capsule.is-closing .theme-capsule-toggle .theme-gear{
+  transform:rotate(0deg)!important;
+  transition-duration:var(--ar266-capsule-close)!important;
+}
+
+.theme-capsule-indicator{
+  transition:
+    left 280ms var(--ar266-capsule-ease),
+    width 280ms var(--ar266-capsule-ease),
+    background-color 260ms ease!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-capsule-shell,
+  .theme-capsule-options,
+  .theme-capsule-toggle .theme-gear,
+  .theme-capsule-indicator{
+    transition-duration:1ms!important;
+    transition-delay:0s!important;
+  }
+}
