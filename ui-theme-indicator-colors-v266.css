@@ -1,0 +1,39 @@
+/* ARSTORE V266 B2.3 — semantic active-theme indicator colors
+   Presentation only. The active indicator visually matches the selected theme. */
+.theme-capsule-indicator{
+  background:var(--ar266-active-indicator,var(--theme-capsule-active))!important;
+  border-color:var(--ar266-active-indicator-border,color-mix(in srgb,var(--theme-capsule-ink) 16%,transparent))!important;
+  box-shadow:var(--ar266-active-indicator-shadow,none)!important;
+  transition:left 280ms var(--ar266-capsule-ease),width 280ms var(--ar266-capsule-ease),background-color 260ms ease,border-color 260ms ease,box-shadow 260ms ease!important;
+}
+
+html[data-theme="light"]{
+  --ar266-active-indicator:#ffffff;
+  --ar266-active-indicator-border:rgba(15,23,42,.18);
+  --ar266-active-indicator-shadow:0 2px 8px rgba(15,23,42,.10),inset 0 1px 0 rgba(255,255,255,.95);
+}
+html[data-theme="dark"]{
+  --ar266-active-indicator:#202938;
+  --ar266-active-indicator-border:rgba(255,255,255,.18);
+  --ar266-active-indicator-shadow:0 2px 8px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.06);
+}
+html[data-theme="charcoal"]{
+  --ar266-active-indicator:#3a3b40;
+  --ar266-active-indicator-border:rgba(255,255,255,.16);
+  --ar266-active-indicator-shadow:0 2px 8px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.055);
+}
+html[data-theme="oled"]{
+  --ar266-active-indicator:#050505;
+  --ar266-active-indicator-border:rgba(255,255,255,.24);
+  --ar266-active-indicator-shadow:0 2px 8px rgba(0,0,0,.36),inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+/* Keep the selected label readable when the indicator itself changes tone. */
+html[data-theme="light"] .theme-capsule-option.active{color:#111827!important;text-shadow:none!important}
+html[data-theme="dark"] .theme-capsule-option.active,
+html[data-theme="charcoal"] .theme-capsule-option.active,
+html[data-theme="oled"] .theme-capsule-option.active{color:#ffffff!important}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-capsule-indicator{transition-duration:1ms!important}
+}
