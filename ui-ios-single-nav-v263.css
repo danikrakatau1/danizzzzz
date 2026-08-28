@@ -1,0 +1,9 @@
+/* ARSTORE V263 — iOS single navigation visual state */
+html[data-ar-platform="ios"] #mobileMenuBtn{pointer-events:auto!important;touch-action:manipulation;position:relative;z-index:4}
+html[data-ar-platform="ios"] .sidebar{backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform}
+html[data-ar-platform="ios"].ar263-gesture .sidebar,html[data-ar-platform="ios"].ar263-gesture .sidebar-overlay{transition:none!important}
+html[data-ar-platform="ios"].ar263-drawer-open .sidebar{visibility:visible!important;pointer-events:auto!important}
+html[data-ar-platform="ios"] .sidebar-overlay:not(.show){visibility:hidden!important;opacity:0!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-ar-platform="ios"] .sidebar-overlay.show{visibility:visible!important;pointer-events:auto!important}
+html[data-ar-platform="ios"] #sidebar [data-nav-toggle],html[data-ar-platform="ios"] #sidebar .nav-parent{touch-action:manipulation}
+@media (prefers-reduced-motion:reduce){html[data-ar-platform="ios"] .sidebar,html[data-ar-platform="ios"] .sidebar-overlay{transition-duration:.01ms!important}}
