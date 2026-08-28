@@ -1,0 +1,68 @@
+/* ARSTORE V266 B2.9 — final CSS audit consolidation.
+   Presentation/performance only; no engine/data/formula changes. */
+
+/* Retire permanent compositor hints inherited from V37/V261. Modern browsers
+   promote the drawer when needed; keeping these layers alive permanently costs
+   memory and can amplify repaint/composition work while scrolling/theme switching. */
+.sidebar,
+.sidebar-overlay,
+.sidebar-nav .nav-accordion-inner,
+.sidebar-nav .nav-chevron{
+  will-change:auto!important;
+}
+
+/* V258 used translateZ(0) as a blanket promotion for most surfaces. Keep the
+   visual hover rules, but do not force every resting card/panel into its own layer. */
+.tool-card,
+.card,
+.panel,
+.snapshot-panel,
+.hero-panel,
+.next-action,
+[class*="result-card"],
+[class*="metric-card"]{
+  transform:none;
+}
+
+/* Light <-> dark-family is the expensive theme path. Extend B2.6 coverage to
+   generic legacy surfaces so old V257/V258/V261 box-shadow/transform transitions
+   cannot re-enter the transition cascade. */
+html.ar266-light-path.ar266-theme-transitioning .panel,
+html.ar266-light-path.ar266-theme-transitioning .card,
+html.ar266-light-path.ar266-theme-transitioning .tool-card,
+html.ar266-light-path.ar266-theme-transitioning .snapshot-panel,
+html.ar266-light-path.ar266-theme-transitioning .hero-panel,
+html.ar266-light-path.ar266-theme-transitioning .next-action,
+html.ar266-light-path.ar266-theme-transitioning [class*="result-card"],
+html.ar266-light-path.ar266-theme-transitioning [class*="metric-card"]{
+  transition-property:background-color,border-color,color!important;
+  transition-duration:120ms!important;
+  transition-timing-function:ease-out!important;
+}
+
+/* Sidebar scroll must remain native and compositor-neutral after all legacy CSS
+   has loaded. B2.7 owns clearance; this layer only seals performance properties. */
+.sidebar-nav{
+  scroll-behavior:auto!important;
+}
+.sidebar-nav .nav-accordion-panel,
+.sidebar-nav .nav-accordion-inner{
+  will-change:auto!important;
+}
+
+/* Avoid animating backdrop-filter on iOS drawer overlay. Opacity provides the
+   motion; blur can settle instantly without a full-screen filtered repaint each frame. */
+html[data-ar-platform="ios"] #sidebarOverlay{
+  transition-property:opacity,visibility!important;
+}
+html[data-ar-platform="ios"] #sidebarOverlay:not(.show){
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .sidebar,.sidebar-overlay,.sidebar-nav .nav-accordion-panel,
+  .sidebar-nav .nav-accordion-inner,.sidebar-nav .nav-chevron{
+    will-change:auto!important;
+  }
+}
