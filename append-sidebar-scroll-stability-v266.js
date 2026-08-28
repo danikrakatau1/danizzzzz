@@ -18,7 +18,7 @@ const checks=[
  ['scrollbar clearance',css.includes('padding-inline-end:12px!important')],
  ['no permanent will-change',css.includes('will-change:auto!important')],
  ['desktop hover transform retired',css.includes('.sidebar-nav .nav-item:hover')&&css.includes('transform:none!important')],
- ['UI only',!css.includes('fee')&&!css.includes('formula')&&!css.includes('database'))
+ ['UI only',!css.includes('fee')&&!css.includes('formula')&&!css.includes('database')]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([name])=>name);
 if(failed.length)throw new Error('V266 B2.7 gate failed: '+failed.join(', '));
