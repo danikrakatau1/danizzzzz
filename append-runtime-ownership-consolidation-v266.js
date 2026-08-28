@@ -68,8 +68,17 @@ const v257=patchFile(path.join('js','ui-premium-618-v257.js'),text=>{
   return text;
 });
 
-// V265 is the iOS viewport/keyboard authority. V261 keeps VisualViewport only
-// for Android/other non-iOS motion behavior.
+// V265 owns iOS viewport/keyboard/input compatibility only. V266 owns iOS
+// drawer reconciliation and the global final runtime owns theme-color.
+const v265=patchFile(path.join('js','ui-ios-compat-v265.js'),text=>{
+  text=replaceOnce(text,'  function recover(){setViewportVars();syncThemeColor();enhanceInputs();reconcileUI();applyMotionPolicy();}','  function recover(){setViewportVars();enhanceInputs();applyMotionPolicy();}','V265 recovery ownership');
+  text=replaceOnce(text,"  document.addEventListener('arstore:page-change',()=>setTimeout(recover,0));\n",'', 'V265 page-change duplicate recovery');
+  const themeObserver=`  const themeObserver=new MutationObserver(()=>syncThemeColor());\n  themeObserver.observe(D,{attributes:true,attributeFilter:['data-theme']});\n\n`;
+  text=replaceOnce(text,themeObserver,'','V265 theme-color observer');
+  return text;
+});
+
+// V261 keeps VisualViewport only for Android/other non-iOS motion behavior.
 const v261=patchFile(path.join('js','ui-motion-core-v261.js'),text=>
   replaceOnce(text,'    const vv=visualViewport;let baseH=vv?.height||innerHeight;','    const vv=platform===\'ios\'?null:visualViewport;let baseH=vv?.height||innerHeight;','V261 iOS VisualViewport owner')
 );
@@ -94,9 +103,12 @@ const checks=[
   ['V257 accordion aria mutation retired',!v257.includes("qsa('[aria-expanded=\"true\"]')")],
   ['V257 VisualViewport retired',!v257.includes("w.visualViewport.addEventListener('resize',vv")],
   ['V257 value observer retired',!v257.includes('const valueObserver=new MutationObserver')],
+  ['V265 drawer reconciliation yielded',v265.includes('function recover(){setViewportVars();enhanceInputs();applyMotionPolicy();}')],
+  ['V265 theme observer retired',!v265.includes('themeObserver.observe')],
+  ['V265 page-change recovery retired',!v265.includes("document.addEventListener('arstore:page-change'" )],
   ['V261 iOS viewport yielded',v261.includes("platform==='ios'?null:visualViewport")],
   ['theme mutation does not restart active timer',themeMotion.includes("if(!root.classList.contains('ar266-theme-transitioning'))arm();")]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([name])=>name);
 if(failed.length)throw new Error('V266 B2.8 gate failed: '+failed.join(', '));
-console.log('V266 B2.8 PASS — runtime ownership consolidated; native sidebar scroll restored; legacy V257/V258/V250 conflicts retired; iOS viewport and theme timers single-owned; engine/data/formula untouched');
+console.log('V266 B2.8 PASS — runtime ownership consolidated; native sidebar scroll restored; legacy V257/V258/V250 conflicts retired; V266 solely reconciles iOS drawer; V265 owns viewport/input only; theme timers single-owned; engine/data/formula untouched');
