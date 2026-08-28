@@ -36,11 +36,11 @@ replaceOnce(
 
 fs.writeFileSync(appPath,app);cp.execFileSync(process.execPath,['--check',appPath],{stdio:'inherit'});
 const checks=[
- ['four theme allow-list',app.includes("['light','dark','charcoal','oled']"))],
- ['four theme settings', ['light','dark','charcoal','oled'].every(t=>app.includes(`data-theme-choice=\"${t}\"`))],
- ['overlay close aria',app.includes("overlay?.setAttribute('aria-hidden', 'true')"))],
- ['overlay open aria',app.includes("overlay?.setAttribute('aria-hidden', 'false')"))],
- ['menu controls sidebar',app.includes("mobileMenuBtn?.setAttribute('aria-controls', 'sidebar')"))]
+ ['four theme allow-list',app.includes("['light','dark','charcoal','oled']")],
+ ['four theme settings',['light','dark','charcoal','oled'].every(t=>app.includes(`data-theme-choice=\"${t}\"`))],
+ ['overlay close aria',app.includes("overlay?.setAttribute('aria-hidden', 'true')")],
+ ['overlay open aria',app.includes("overlay?.setAttribute('aria-hidden', 'false')")],
+ ['menu controls sidebar',app.includes("mobileMenuBtn?.setAttribute('aria-controls', 'sidebar')")]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([n])=>n);if(failed.length)throw new Error('V266 HTML RUNTIME failed: '+failed.join(', '));
 console.log('V266 HTML RUNTIME PASS — Settings matches all 4 themes; drawer ARIA state follows canonical open/close; app syntax valid');
