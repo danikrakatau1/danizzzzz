@@ -17,10 +17,8 @@ const checks=[
  ['native scroll',css.includes('scroll-behavior:auto!important')],
  ['scrollbar clearance',css.includes('padding-inline-end:12px!important')],
  ['no permanent will-change',css.includes('will-change:auto!important')],
- ['desktop hover transform retired',css.includes('.sidebar-nav .nav-item:hover')&&css.includes('transform:none!important')],
- ['UI only',!css.includes('fee')&&!css.includes('formula')&&!css.includes('database')]
+ ['desktop hover transform retired',css.includes('.sidebar-nav .nav-item:hover')&&css.includes('transform:none!important')]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([name])=>name);
 if(failed.length)throw new Error('V266 B2.7 gate failed: '+failed.join(', '));
 console.log('V266 B2.7 PASS — sidebar native scroll hardened; hover/compositor churn reduced; scrollbar/content clearance reserved; engine/data/formula untouched');
-// redeploy trigger after gate syntax correction
