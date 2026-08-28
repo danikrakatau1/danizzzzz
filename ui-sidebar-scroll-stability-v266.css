@@ -1,0 +1,88 @@
+/* ARSTORE V266 B2.7 — sidebar scroll performance + content clearance
+   UI only. Keep native scrolling, reduce hover/compositor churn, reserve scrollbar space. */
+
+.sidebar,
+.sidebar-nav{
+  min-width:0!important;
+}
+
+.sidebar-nav{
+  box-sizing:border-box!important;
+  scroll-behavior:auto!important;
+  scrollbar-gutter:stable!important;
+  padding-inline-end:12px!important;
+  contain:layout style!important;
+}
+
+.sidebar-nav .nav-group,
+.sidebar-nav .nav-parent,
+.sidebar-nav .nav-item,
+.sidebar-nav .nav-subitem,
+.sidebar-nav .nav-accordion-panel,
+.sidebar-nav .nav-accordion-inner{
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+
+.sidebar-nav .nav-item,
+.sidebar-nav .nav-subitem,
+.sidebar-nav .nav-parent{
+  overflow:hidden!important;
+}
+
+.sidebar-nav .nav-item > *,
+.sidebar-nav .nav-subitem > *,
+.sidebar-nav .nav-parent > *{
+  min-width:0!important;
+}
+
+/* Accordion panels no longer keep permanent compositor hints after expansion. */
+.sidebar-nav .nav-accordion-panel{
+  will-change:auto!important;
+}
+
+/* Mouse/trackpad scrolling should not continuously trigger transform churn as
+   rows pass beneath a stationary pointer. Keep hover feedback color-only. */
+@media (hover:hover) and (pointer:fine){
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-item,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-subitem,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-parent,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-icon{
+    transform:none!important;
+  }
+
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-item:hover,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-subitem:hover,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-parent:hover,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-item:hover .nav-icon{
+    transform:none!important;
+  }
+
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-item,
+  html[data-ar-platform="desktop"] .sidebar-nav .nav-subitem{
+    transition-property:background-color,color,border-color!important;
+    transition-duration:120ms!important;
+  }
+}
+
+/* Keep the final menu rows fully clear of the scroll thumb and footer edge. */
+.sidebar-nav > :last-child,
+.sidebar-nav .nav-group:last-of-type{
+  margin-bottom:20px!important;
+}
+
+@media (max-width:820px){
+  .sidebar-nav{
+    padding-inline-end:max(12px,env(safe-area-inset-right,0px))!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .sidebar-nav .nav-item,
+  .sidebar-nav .nav-subitem,
+  .sidebar-nav .nav-parent,
+  .sidebar-nav .nav-chevron{
+    transition-duration:1ms!important;
+  }
+}
