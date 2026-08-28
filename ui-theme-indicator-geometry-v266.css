@@ -1,0 +1,60 @@
+/* ARSTORE V266 B2.4 — exact theme-indicator geometry + stable theme choreography
+   Presentation only. Indicator follows the selected button with compositor motion. */
+:root{
+  --ar266-indicator-move:320ms;
+  --ar266-indicator-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Do not animate layout-position `left` while the capsule itself is resizing.
+   The runtime measures the selected button and writes --indicator-x/width. */
+.theme-capsule-indicator{
+  left:0!important;
+  width:var(--indicator-width,72px)!important;
+  transform:translate3d(var(--indicator-x,6px),0,0)!important;
+  will-change:transform,width,background-color;
+  transition:
+    transform var(--ar266-indicator-move) var(--ar266-indicator-ease),
+    width var(--ar266-indicator-move) var(--ar266-indicator-ease),
+    background-color 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease!important;
+}
+
+/* Color is keyed from the target selected by the user immediately, instead of
+   waiting for the whole document theme repaint to finish. */
+.theme-action-capsule[data-active-theme="light"]{
+  --ar266-active-indicator:#ffffff;
+  --ar266-active-indicator-border:rgba(15,23,42,.22);
+  --ar266-active-indicator-shadow:0 2px 9px rgba(15,23,42,.12),inset 0 1px 0 rgba(255,255,255,.98);
+}
+.theme-action-capsule[data-active-theme="dark"]{
+  --ar266-active-indicator:#202938;
+  --ar266-active-indicator-border:rgba(255,255,255,.20);
+  --ar266-active-indicator-shadow:0 2px 9px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.theme-action-capsule[data-active-theme="charcoal"]{
+  --ar266-active-indicator:#3a3b40;
+  --ar266-active-indicator-border:rgba(255,255,255,.18);
+  --ar266-active-indicator-shadow:0 2px 9px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.theme-action-capsule[data-active-theme="oled"]{
+  --ar266-active-indicator:#030303;
+  --ar266-active-indicator-border:rgba(255,255,255,.28);
+  --ar266-active-indicator-shadow:0 2px 9px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.theme-action-capsule[data-active-theme="light"] .theme-capsule-option.active{color:#111827!important}
+.theme-action-capsule[data-active-theme="dark"] .theme-capsule-option.active,
+.theme-action-capsule[data-active-theme="charcoal"] .theme-capsule-option.active,
+.theme-action-capsule[data-active-theme="oled"] .theme-capsule-option.active{color:#fff!important}
+
+/* During exit, geometry stays frozen; only the capsule/options perform the close.
+   This prevents the indicator from racing back while the shell is shrinking. */
+.theme-action-capsule.is-closing .theme-capsule-indicator{
+  transition-property:background-color,border-color,box-shadow!important;
+  transition-duration:220ms!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-capsule-indicator{transition-duration:1ms!important}
+}
