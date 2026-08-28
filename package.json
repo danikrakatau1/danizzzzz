@@ -1,9 +1,9 @@
 {
   "name":"arstore-tools-v3",
-  "version":"3.4.0-rc1-262-preview",
+  "version":"3.4.0-rc1-261-preview",
   "private":true,
   "scripts":{
-    "build":"node build-v34.js && node append-mobile-hotfix-v34.js && node append-final-sweep-v37-60.js && node append-product-center-v71.js && node append-smart-tab-history-v70.js && node append-fast-favicon-v5.js && node append-final-hardening-v175.js && node append-gear-favicon-v200.js && node append-mobile-visual-recovery-v250.js && node append-favicon-v251.js && node append-favicon-v256.js && node append-premium-618-v257.js && node append-premium-motion-v258.js && node append-ios-sidebar-navfix-v259.js && node append-ios-light-icons-v260.js && node append-premium-crossdevice-v261.js && node append-ios-navigation-state-v262.js",
+    "build":"node build-v34.js && node append-mobile-hotfix-v34.js && node append-final-sweep-v37-60.js && node append-product-center-v71.js && node append-smart-tab-history-v70.js && node append-fast-favicon-v5.js && node append-final-hardening-v175.js && node append-gear-favicon-v200.js && node append-mobile-visual-recovery-v250.js && node append-favicon-v251.js && node append-favicon-v256.js && node append-premium-618-v257.js && node append-premium-motion-v258.js && node append-ios-sidebar-navfix-v259.js && node append-ios-light-icons-v260.js && node append-premium-crossdevice-v261.js",
     "dev":"npx vercel dev"
   }
 }
