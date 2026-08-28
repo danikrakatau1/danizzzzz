@@ -1,0 +1,47 @@
+/* ARSTORE V265 — iPhone/iOS/Safari compatibility + premium motion; NO custom swipe navigation */
+html[data-ar-platform="ios"]{
+  --ar265-ease:cubic-bezier(.22,.8,.2,1);
+  --ar265-ease-out:cubic-bezier(.16,1,.3,1);
+  --ar265-fast:160ms;
+  --ar265-med:260ms;
+  --ar265-slow:380ms;
+  --ar265-vh:1vh;
+  --ar265-safe-top:env(safe-area-inset-top,0px);
+  --ar265-safe-right:env(safe-area-inset-right,0px);
+  --ar265-safe-bottom:env(safe-area-inset-bottom,0px);
+  --ar265-safe-left:env(safe-area-inset-left,0px);
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  background:var(--page-bg,var(--bg,#0b0b0f));
+}
+html[data-ar-platform="ios"],html[data-ar-platform="ios"] body{min-height:100%;min-height:100svh;min-height:100dvh;overscroll-behavior-y:auto}
+html[data-ar-platform="ios"] body{padding-left:var(--ar265-safe-left);padding-right:var(--ar265-safe-right);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html[data-ar-platform="ios"] .topbar{padding-top:max(var(--ar265-safe-top),0px)}
+html[data-ar-platform="ios"] #sidebar{padding-top:max(var(--ar265-safe-top),0px);padding-bottom:max(var(--ar265-safe-bottom),12px);height:100dvh;max-height:calc(var(--ar265-vh,1vh)*100);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:translateZ(0);transition:transform var(--ar265-med) var(--ar265-ease-out)!important}
+html[data-ar-platform="ios"] #sidebarOverlay{transition:opacity var(--ar265-med) var(--ar265-ease),backdrop-filter var(--ar265-med) var(--ar265-ease),-webkit-backdrop-filter var(--ar265-med) var(--ar265-ease)!important;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+html[data-ar-platform="ios"] #sidebarOverlay:not(.show):not(.active):not(.visible){opacity:0!important;visibility:hidden!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-ar-platform="ios"] #sidebarOverlay.show{visibility:visible;pointer-events:auto}
+html[data-ar-platform="ios"] #mobileMenuBtn,html[data-ar-platform="ios"] button,html[data-ar-platform="ios"] [role="button"],html[data-ar-platform="ios"] a{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+html[data-ar-platform="ios"] #mobileMenuBtn,html[data-ar-platform="ios"] #sidebar .nav-item,html[data-ar-platform="ios"] #sidebar .nav-subitem{min-height:44px}
+html[data-ar-platform="ios"] button,html[data-ar-platform="ios"] [role="button"]{transition:transform var(--ar265-fast) var(--ar265-ease-out),opacity var(--ar265-fast) var(--ar265-ease),background-color var(--ar265-med) var(--ar265-ease),border-color var(--ar265-med) var(--ar265-ease),box-shadow var(--ar265-med) var(--ar265-ease)}
+html[data-ar-platform="ios"] button:active,html[data-ar-platform="ios"] [role="button"]:active{transform:scale(.985)}
+html[data-ar-platform="ios"] #sidebar .nav-accordion-panel{transition:grid-template-rows var(--ar265-med) var(--ar265-ease-out),max-height var(--ar265-med) var(--ar265-ease-out),opacity var(--ar265-fast) var(--ar265-ease)!important}
+html[data-ar-platform="ios"] #sidebar .nav-chevron{transition:transform var(--ar265-med) var(--ar265-ease-out)!important}
+html[data-ar-platform="ios"] .page{animation-duration:var(--ar265-med);animation-timing-function:var(--ar265-ease-out)}
+html[data-ar-platform="ios"] .page.active{animation:ar265PageIn var(--ar265-med) var(--ar265-ease-out) both}
+@keyframes ar265PageIn{from{opacity:.72;transform:translate3d(0,6px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+html[data-ar-platform="ios"] .modal,html[data-ar-platform="ios"] .research-modal,html[data-ar-platform="ios"] .quick-preview,html[data-ar-platform="ios"] .bottom-sheet{max-height:calc(var(--ar265-vh,1vh)*100 - var(--ar265-safe-top) - var(--ar265-safe-bottom));overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+html[data-ar-platform="ios"] .bottom-sheet{padding-bottom:max(var(--ar265-safe-bottom),16px)}
+html[data-ar-platform="ios"] input,html[data-ar-platform="ios"] textarea,html[data-ar-platform="ios"] select{font-size:max(16px,1em);-webkit-appearance:none;appearance:none}
+html[data-ar-platform="ios"] input[type="checkbox"],html[data-ar-platform="ios"] input[type="radio"]{-webkit-appearance:auto;appearance:auto}
+html[data-ar-platform="ios"] input:focus,html[data-ar-platform="ios"] textarea:focus,html[data-ar-platform="ios"] select:focus{scroll-margin-top:calc(var(--ar265-safe-top) + 88px);scroll-margin-bottom:calc(var(--ar265-safe-bottom) + 120px)}
+html[data-ar-platform="ios"] img,html[data-ar-platform="ios"] svg{max-width:100%}
+html[data-ar-platform="ios"] table,html[data-ar-platform="ios"] pre,html[data-ar-platform="ios"] code{max-width:100%}
+html[data-ar-platform="ios"] .horizontal-scroll,html[data-ar-platform="ios"] [data-horizontal-scroll]{overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+html[data-ar-platform="ios"] .toast,html[data-ar-platform="ios"] [role="status"]{transform:translateZ(0)}
+html[data-ar-platform="ios"] .main-content{min-width:0;overflow-x:clip}
+html[data-ar-platform="ios"].ar265-keyboard-open .bottom-nav,html[data-ar-platform="ios"].ar265-keyboard-open [data-sticky-bottom]{position:relative!important;bottom:auto!important}
+html[data-ar-platform="ios"].ar265-low-motion *,html[data-ar-platform="ios"].ar265-low-motion *::before,html[data-ar-platform="ios"].ar265-low-motion *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+@media (prefers-reduced-motion:reduce){html[data-ar-platform="ios"] *,html[data-ar-platform="ios"] *::before,html[data-ar-platform="ios"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@supports not (height:100dvh){html[data-ar-platform="ios"] #sidebar{height:calc(var(--ar265-vh,1vh)*100)}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html[data-ar-platform="ios"] #sidebarOverlay.show{background:rgba(0,0,0,.46)!important}}
