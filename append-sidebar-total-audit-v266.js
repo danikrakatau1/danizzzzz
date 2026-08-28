@@ -38,6 +38,8 @@ const checks=[
  ['single mobile scroll owner',finalCss.includes('#sidebar{\n    overflow:hidden!important;')&&finalCss.includes('#sidebar .sidebar-nav{')],
  ['scrollbar/content clearance',finalCss.includes('scrollbar-gutter:stable!important')&&finalCss.includes('padding-inline-end:12px!important')],
  ['safe-area bottom clearance',finalCss.includes('env(safe-area-inset-bottom,0px)')],
+ ['legacy huge bottom spacer retired',finalCss.includes('.sidebar-nav::after{')&&finalCss.includes('content:none!important')&&finalCss.includes('height:0!important')],
+ ['scroll padding normalized',finalCss.includes('scroll-padding-bottom:max(20px,env(safe-area-inset-bottom,0px))!important')&&finalCss.includes('scroll-padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important')],
  ['risky layout containment retired',!b27.includes('contain:layout style!important')&&finalCss.includes('contain:none!important')],
  ['interactive rows not clipped',b27.includes('overflow:visible!important')&&finalCss.includes('overflow:visible!important')],
  ['label-only ellipsis',finalCss.includes('text-overflow:ellipsis!important')&&finalCss.includes('white-space:nowrap!important')],
@@ -56,4 +58,4 @@ const checks=[
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([n])=>n);
 if(failed.length)throw new Error('V266 SIDEBAR TOTAL AUDIT failed: '+failed.join(', '));
-console.log('V266 SIDEBAR TOTAL AUDIT PASS — nav is the single mobile scroll owner; nested sidebar scrolling retired; dynamic accordion geometry uncontained; row clipping replaced by label ellipsis; safe-area/scrollbar/focus clearance sealed; base app remains drawer/accordion owner; iOS remains native/no custom swipe');
+console.log('V266 SIDEBAR TOTAL AUDIT PASS — nav is the single mobile scroll owner; nested sidebar scrolling and legacy oversized bottom spacer retired; dynamic accordion geometry uncontained; row clipping replaced by label ellipsis; safe-area/scrollbar/focus clearance sealed; base app remains drawer/accordion owner; iOS remains native/no custom swipe');
