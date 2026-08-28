@@ -26,6 +26,7 @@ const checks=[
  ['single Smart History script',historyScriptCount===1],
  ['retired V34/V61 history scripts absent',!html.includes('ui-ios-history-canonical-v34.js')&&!html.includes('ui-ios-nav-authority-v61-69.js')],
  ['retired iOS custom swipe scripts absent',!html.includes('ui-ios-single-nav-v263.js')&&!html.includes('ui-ios-navigation-v264.js')],
+ ['retired V259 iOS click runtime absent',!html.includes('ui-ios-sidebar-navfix-v259.js')],
  ['V250 no leaf click owner',!v250.includes(".sidebar .nav-item,.sidebar .nav-subitem,.sidebar [data-page]'))setTimeout(hardCloseDrawer")],
  ['V250 no overlay click owner',!v250.includes("ov.addEventListener('click'")],
  ['V261 gesture explicitly non-iOS',v261.includes("if(platform!=='ios')setupDrawerGesture();")],
@@ -40,4 +41,4 @@ const checks=[
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([n])=>n);
 if(failed.length)throw new Error('V266 NAV OWNERSHIP failed: '+failed.join(', '));
-console.log('V266 NAVIGATION OWNERSHIP PASS — base app is sole click/drawer/accordion/router owner; Smart History #70 is sole browser-history owner; Android gesture isolated to V261 non-iOS path; iOS uses Safari/native history with V265/V266 derived recovery only');
+console.log('V266 NAVIGATION OWNERSHIP PASS — base app is sole click/drawer/accordion/router owner; Smart History #70 is sole browser-history owner; V259/V263/V264 legacy iOS navigation runtimes retired; Android gesture isolated to V261 non-iOS path; iOS uses Safari/native history with V265/V266 derived recovery only');
