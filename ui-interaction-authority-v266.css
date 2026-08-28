@@ -1,0 +1,8 @@
+/* ARSTORE V266 — canonical iOS drawer/overlay states; UI only */
+html[data-ar-platform="ios"].ar266-authority #sidebar{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+html[data-ar-platform="ios"].ar266-authority #sidebarOverlay{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+html[data-ar-platform="ios"].ar266-authority #sidebarOverlay:not(.show){opacity:0!important;visibility:hidden!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html[data-ar-platform="ios"].ar266-authority #sidebarOverlay.show{visibility:visible!important;pointer-events:auto!important}
+html[data-ar-platform="ios"].ar266-authority body:not(.drawer-open) #sidebarOverlay{pointer-events:none!important}
+html[data-ar-platform="ios"].ar266-authority body.drawer-open{overflow:hidden}
+@media (prefers-reduced-motion:reduce){html[data-ar-platform="ios"].ar266-authority #sidebar,html[data-ar-platform="ios"].ar266-authority #sidebarOverlay{transition-duration:.01ms!important}}
