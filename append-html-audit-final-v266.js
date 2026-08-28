@@ -62,7 +62,7 @@ const checks=[
  ['overlay starts hidden',/id=["']sidebarOverlay["'][^>]*aria-hidden=["']true["']/i.test(html)||/aria-hidden=["']true["'][^>]*id=["']sidebarOverlay["']/i.test(html)],
  ['settings four themes',['light','dark','charcoal','oled'].every(t=>app.includes(`data-theme-choice=\"${t}\"`))],
  ['base accepts four themes',app.includes("['light','dark','charcoal','oled']")],
- ['drawer aria runtime sync',app.includes("overlay?.setAttribute('aria-hidden', 'false')")&&app.includes("overlay?.setAttribute('aria-hidden', 'true')"))]
+ ['drawer aria runtime sync',app.includes("overlay?.setAttribute('aria-hidden', 'false')")&&app.includes("overlay?.setAttribute('aria-hidden', 'true')")]
 ];
 const failed=checks.filter(([,ok])=>!ok).map(([n])=>n);
 if(failed.length){
