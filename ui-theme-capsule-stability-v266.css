@@ -1,0 +1,47 @@
+/* ARSTORE V266 B2.5 — stable theme capsule lifecycle
+   Indicator never measures/moves while the capsule width is animating. */
+:root{
+  --ar266-capsule-open-settle:360ms;
+  --ar266-theme-choice-settle:700ms;
+}
+
+/* Closed/opening: keep indicator invisible. Its geometry is snapped only after
+   the shell has reached its open width. */
+.theme-action-capsule:not(.is-open):not(.is-closing) .theme-capsule-indicator,
+.theme-action-capsule.is-opening .theme-capsule-indicator{
+  opacity:0!important;
+}
+.theme-action-capsule.is-open:not(.is-opening) .theme-capsule-indicator{
+  opacity:1!important;
+  transition:
+    transform var(--ar266-indicator-move) var(--ar266-indicator-ease),
+    width var(--ar266-indicator-move) var(--ar266-indicator-ease),
+    background-color 280ms ease,
+    border-color 280ms ease,
+    box-shadow 280ms ease,
+    opacity 140ms ease!important;
+}
+
+/* Reopen geometry is a snap, not a travel from stale closed coordinates. */
+.theme-action-capsule.indicator-snap .theme-capsule-indicator{
+  transition:none!important;
+}
+
+/* Closing is intentionally indicator-motion-free: fade it first while the
+   option strip/shell perform their own exit animation. */
+.theme-action-capsule.is-closing .theme-capsule-indicator{
+  opacity:0!important;
+  transition:opacity 120ms ease!important;
+  will-change:opacity!important;
+}
+
+/* Do not allow stale indicator transform/width transitions to restart because
+   a root theme repaint or ResizeObserver fires during shell resize. */
+.theme-action-capsule.is-opening .theme-capsule-indicator,
+.theme-action-capsule.is-closing .theme-capsule-indicator{
+  pointer-events:none!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-capsule-indicator{transition-duration:1ms!important;transition-delay:0s!important}
+}
