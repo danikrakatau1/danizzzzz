@@ -1,0 +1,94 @@
+/* ARSTORE V266 B2.1 — smooth theme switcher + theme surface transitions */
+:root{
+  --ar266-theme-fast:160ms;
+  --ar266-theme-base:260ms;
+  --ar266-theme-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* Segmented theme control: stable geometry, no jumping active pill. */
+.theme-segment{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  align-items:center!important;
+  gap:4px!important;
+  padding:4px!important;
+  overflow:hidden!important;
+  border-radius:16px!important;
+  isolation:isolate;
+}
+.theme-segment button{
+  min-width:0!important;
+  min-height:40px!important;
+  padding:0 12px!important;
+  border-radius:12px!important;
+  border:1px solid transparent!important;
+  background:transparent!important;
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transition:
+    background-color var(--ar266-theme-base) var(--ar266-theme-ease),
+    border-color var(--ar266-theme-base) var(--ar266-theme-ease),
+    color var(--ar266-theme-fast) ease,
+    box-shadow var(--ar266-theme-base) var(--ar266-theme-ease),
+    opacity var(--ar266-theme-fast) ease!important;
+}
+.theme-segment button.active{
+  background:rgba(124,92,255,.16)!important;
+  border-color:rgba(151,126,255,.28)!important;
+  box-shadow:0 8px 22px rgba(82,62,190,.14),inset 0 0 0 1px rgba(255,255,255,.025)!important;
+}
+.theme-segment button:active{transform:translateZ(0) scale(.985)!important}
+
+html[data-theme="light"] .theme-segment button.active{
+  background:rgba(124,92,255,.11)!important;
+  border-color:rgba(111,83,219,.20)!important;
+  box-shadow:0 7px 18px rgba(76,61,150,.10)!important;
+}
+html[data-theme="oled"] .theme-segment button.active{
+  background:rgba(124,92,255,.13)!important;
+  border-color:rgba(151,126,255,.22)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.28)!important;
+}
+
+/* Theme transition: only paint-affecting properties; no layout/transform ownership theft. */
+html.ar266-theme-transitioning body,
+html.ar266-theme-transitioning .app-shell,
+html.ar266-theme-transitioning .main-content,
+html.ar266-theme-transitioning .sidebar,
+html.ar266-theme-transitioning .topbar,
+html.ar266-theme-transitioning .brand,
+html.ar266-theme-transitioning .sidebar-footer,
+html.ar266-theme-transitioning .v3-hero,
+html.ar266-theme-transitioning .v3-status-card,
+html.ar266-theme-transitioning .v3-calc-card,
+html.ar266-theme-transitioning .v3-result-card,
+html.ar266-theme-transitioning .settings-card,
+html.ar266-theme-transitioning .database-market-block,
+html.ar266-theme-transitioning .product-workspace-panel,
+html.ar266-theme-transitioning input,
+html.ar266-theme-transitioning select,
+html.ar266-theme-transitioning textarea,
+html.ar266-theme-transitioning button{
+  transition-property:background-color,border-color,color,box-shadow,opacity!important;
+  transition-duration:var(--ar266-theme-base)!important;
+  transition-timing-function:var(--ar266-theme-ease)!important;
+}
+
+/* Avoid white flash between dark/light surfaces while variables change. */
+html,body,.app-shell,.main-content{
+  transition:background-color var(--ar266-theme-base) var(--ar266-theme-ease),color var(--ar266-theme-fast) ease;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .theme-segment button,
+  html.ar266-theme-transitioning body,
+  html.ar266-theme-transitioning .app-shell,
+  html.ar266-theme-transitioning .main-content,
+  html.ar266-theme-transitioning .sidebar,
+  html.ar266-theme-transitioning .topbar,
+  html.ar266-theme-transitioning button{
+    transition-duration:1ms!important;
+  }
+}
