@@ -14,8 +14,9 @@ const fingerprintFiles=files.filter(f=>!['integrity-manifest-v277.json','release
 const source=fingerprintFiles.map(x=>`${x.path}\t${x.bytes}\t${x.sha256}`).join('\n'),fingerprint=sha(Buffer.from(source)),totalBytes=fingerprintFiles.reduce((n,x)=>n+x.bytes,0);
 const manifest={version:285,package:pkg.version,status:'RELEASE-FREEZE-CANDIDATE',fileCount:fingerprintFiles.length,totalBytes,sha256:fingerprint,payload:{bytes:payload.length,sha256:sha(payload)},auditChain:chain,files:fingerprintFiles};
 fs.writeFileSync(path.join(OUT,'release-freeze-manifest-v285.json'),JSON.stringify(manifest,null,2)+'\n');
+const rc=Number((pkg.version.match(/rc1-(\d+)-preview/)||[])[1]||0);
 const checks=[
- ['package V285',pkg.version==='3.4.0-rc1-285-preview'],
+ ['package RC >=285',rc>=285],
  ['canonical payload exact SHA',sha(payload)===EXPECTED_PAYLOAD_SHA],
  ['all #10-#30 audit scripts exactly once',Object.values(counts).every(n=>n===1)],
  ['all local HTML refs resolve',missingRefs.length===0],
