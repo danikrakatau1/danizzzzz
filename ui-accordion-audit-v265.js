@@ -68,8 +68,8 @@
     document.querySelectorAll(GROUP_SELECTOR).forEach((group,index)=>syncGroup(group,index));
   }
 
-  // Capture guard: the first click is handled by base app.js; repeated clicks during
-  // the same transition are swallowed so nested accordion state cannot race.
+  // Base app owns the actual accordion toggle. This layer only guards accidental
+  // double taps while one user-initiated transition is settling.
   document.addEventListener('click',event=>{
     const toggle=event.target.closest?.(SELECTOR);
     if(!toggle)return;
@@ -83,8 +83,6 @@
     queueMicrotask(()=>syncGroup(group,[...document.querySelectorAll(GROUP_SELECTOR)].indexOf(group),{animate:true}));
   },true);
 
-  // Native buttons already emit click for Enter/Space; this only prevents an
-  // Escape/focus edge case when a panel closes programmatically around focused content.
   document.addEventListener('keydown',event=>{
     if(event.key!=='Escape')return;
     const focused=document.activeElement;
@@ -94,6 +92,9 @@
     toggle?.focus({preventScroll:true});
   });
 
+  // IMPORTANT: observer synchronization must never start a new transition.
+  // markTransition() itself changes the group's class list, so animate:true here
+  // would recursively wake this observer and keep the click guard stuck forever.
   const observer=new MutationObserver(records=>{
     const touched=new Set();
     for(const record of records){
@@ -104,19 +105,18 @@
     }
     if(!touched.size)return;
     const groups=[...document.querySelectorAll(GROUP_SELECTOR)];
-    touched.forEach(group=>syncGroup(group,groups.indexOf(group),{animate:true}));
+    touched.forEach(group=>syncGroup(group,groups.indexOf(group),{animate:false}));
   });
 
   document.querySelectorAll(GROUP_SELECTOR).forEach(group=>observer.observe(group,{attributes:true,attributeFilter:['class']}));
   syncAll();
 
-  // Re-run after route/history synchronization and late sidebar rebuilds.
   document.addEventListener('arstore:page-change',()=>requestAnimationFrame(syncAll));
   window.addEventListener('pageshow',syncAll,{passive:true});
 
   window.ARSTORE_ACCORDION_AUDIT_V265={
     sync:syncAll,
-    version:'265',
+    version:'265.1-loopfix',
     scope:'navigation-accordion-only'
   };
 })();
