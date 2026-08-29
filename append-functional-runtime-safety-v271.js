@@ -11,7 +11,6 @@ let app=fs.readFileSync(files.app,'utf8');
 research=research.replace(/\$\('reanalyzeBtn'\)\?\.addEventListener\('click',\s*runResearch\);/g,"$('reanalyzeBtn')?.addEventListener('click', triggerResearch);");
 research=research.replace(/Netlify Dev/gi,'Vercel Dev');
 
-// Freeze Fee UI controls at the moment calculation choreography starts.
 if(!fee.includes('const feeLocked=[...form.elements]')){
   const lockPoint=/els\.btn\.classList\.add\(['\"]is-loading['\"]\);/;
   if(!lockPoint.test(fee))throw new Error('V271 fee lock point missing');
@@ -23,14 +22,12 @@ if(!fee.includes('const feeLocked=[...form.elements]')){
 
 profit=profit.replace("message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');confidence();return false","message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');E.conf.textContent='CONFIDENCE · LOW';E.conf.className='low';return false");
 if(!profit.includes('const profitLocked=[...form.elements]')){
-  const start="function loading(r){E.empty.hidden=true;E.content.hidden=true;E.load.hidden=false;$('profitCalculateBtn').disabled=true;";
-  const repl="function loading(r){const profitLocked=[...form.elements].filter(el=>!el.disabled),modeLocked=q('[data-profit-mode]').filter(el=>!el.disabled);profitLocked.forEach(el=>el.disabled=true);modeLocked.forEach(el=>el.disabled=true);E.empty.hidden=true;E.content.hidden=true;E.load.hidden=false;$('profitCalculateBtn').disabled=true;";
-  if(!profit.includes(start))throw new Error('V271 profit lock signature missing');
-  profit=profit.replace(start,repl);
-  const end="render(r);$('profitCalculateBtn').disabled=false;setDirty(false)},980)";
-  const endRepl="render(r);profitLocked.forEach(el=>el.disabled=false);modeLocked.forEach(el=>el.disabled=false);$('profitCalculateBtn').disabled=false;setDirty(false)},980)";
-  if(!profit.includes(end))throw new Error('V271 profit unlock signature missing');
-  profit=profit.replace(end,endRepl);
+  const start=/function loading\(r\)\{/;
+  if(!start.test(profit))throw new Error('V271 profit loading function missing');
+  profit=profit.replace(start,"function loading(r){const profitLocked=[...form.elements].filter(el=>!el.disabled),modeLocked=q('[data-profit-mode]').filter(el=>!el.disabled);profitLocked.forEach(el=>el.disabled=true);modeLocked.forEach(el=>el.disabled=true);");
+  const unlockPoint=/setDirty\(false\)\},\s*980\)/;
+  if(!unlockPoint.test(profit))throw new Error('V271 profit choreography end missing');
+  profit=profit.replace(unlockPoint,"profitLocked.forEach(el=>el.disabled=false);modeLocked.forEach(el=>el.disabled=false);setDirty(false)},980)");
 }
 
 fs.writeFileSync(files.research,research);fs.writeFileSync(files.fee,fee);fs.writeFileSync(files.profit,profit);fs.writeFileSync(files.app,app);
