@@ -40,7 +40,7 @@ const count=(s,re)=>(s.match(re)||[]).length;
 const submitPaths=s=>count(s,/addEventListener\(['\"]submit['\"]/g)+count(s,/\.onsubmit\s*=/g);
 const scriptSrcs=[...html.matchAll(/<script[^>]+src=["']([^"']+)["'][^>]*>/gi)].map(m=>m[1].split('?')[0]);
 const duplicateScripts=[...new Set(scriptSrcs.filter((src,i,a)=>a.indexOf(src)!==i))];
-const baseOverlayOwners=count(app,/overlay\?\.addEventListener\(\s*['\"]click['\"]\s*,\s*closeSidebar\s*\)/g);
+const baseOverlayOwners=count(app,/(?:sidebarOverlay|overlay)\?\.addEventListener\(\s*['\"]click['\"]\s*,\s*closeSidebar\s*\)/g);
 const baseHamburgerOwners=count(app,/mobileMenuBtn\?\.addEventListener\(\s*['\"]click['\"]/g);
 
 const checks=[
