@@ -1,0 +1,57 @@
+/* ===== ARSTORE V3.4 #14 — SIDEBAR TOTAL AUDIT · V269 =====
+   Sidebar geometry/scroll/accessibility only. No fee/formula/database logic. */
+.sidebar{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  contain:none!important;
+}
+.sidebar-nav{
+  flex:1 1 0!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior-y:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  touch-action:pan-y!important;
+  scrollbar-gutter:stable!important;
+  scroll-behavior:auto!important;
+  scroll-padding-top:14px!important;
+  scroll-padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;
+  padding-inline-end:10px!important;
+  padding-bottom:max(24px,env(safe-area-inset-bottom,0px))!important;
+}
+.sidebar-nav::after{content:none!important;height:0!important;display:none!important}
+.sidebar-nav .nav-item,
+.sidebar-nav .nav-subitem,
+.sidebar-nav .nav-parent{
+  min-width:0!important;
+  overflow:visible!important;
+}
+.sidebar-nav .nav-item>span:not(.nav-icon):not(.nav-step):not(.nav-chevron),
+.sidebar-nav .nav-subitem>span:not(.nav-subdot):not(.nav-chevron){
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.sidebar-nav .nav-accordion-panel{contain:none!important;will-change:auto!important}
+.sidebar-nav .nav-accordion-inner{min-width:0!important}
+.sidebar-nav .nav-item:focus-visible,
+.sidebar-nav .nav-subitem:focus-visible,
+.sidebar-nav [data-nav-toggle]:focus-visible{
+  outline:2px solid rgba(139,92,246,.78)!important;
+  outline-offset:-2px!important;
+}
+@media(max-width:820px),(max-width:900px) and (pointer:coarse){
+  #sidebar{overflow:hidden!important}
+  #sidebar .sidebar-nav{
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    scroll-padding-bottom:max(32px,env(safe-area-inset-bottom,0px))!important;
+    padding-bottom:max(32px,env(safe-area-inset-bottom,0px))!important;
+  }
+  .sidebar-nav .nav-item,.sidebar-nav .nav-subitem{min-height:46px;touch-action:manipulation!important}
+}
+@media(prefers-reduced-motion:reduce){.sidebar-nav{scroll-behavior:auto!important}}
