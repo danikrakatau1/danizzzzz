@@ -1,0 +1,92 @@
+/* ARSTORE V288 — Soft Premium Light Theme · UI only */
+html[data-theme="light"]{
+  color-scheme:light;
+  --bg:#e8edf3;
+  --bg2:#eef2f6;
+  --panel:#f4f6f8;
+  --panel2:#eef2f5;
+  --panel3:#e9eef3;
+  --line:rgba(37,50,70,.10);
+  --line2:rgba(37,50,70,.16);
+  --text:#172033;
+  --muted:#697589;
+  --ui-page-bg:#e8edf3;
+  --ui-topbar-bg:rgba(236,240,244,.94);
+  --ui-surface:#f3f5f7;
+  --ui-surface-2:#edf1f4;
+  --ui-soft-line:rgba(37,50,70,.11);
+}
+html[data-theme="light"],html[data-theme="light"] body,html[data-theme="light"] .app-shell,html[data-theme="light"] .main-content{
+  background:#e8edf3!important;
+  color:var(--text)!important;
+}
+html[data-theme="light"] body{
+  background:radial-gradient(circle at 72% -10%,rgba(122,92,210,.055),transparent 28%),linear-gradient(180deg,#edf1f5 0%,#e7ecf2 100%)!important;
+}
+html[data-theme="light"] .topbar{
+  background:rgba(236,240,244,.94)!important;
+  border-bottom-color:rgba(37,50,70,.10)!important;
+  box-shadow:0 8px 28px rgba(44,55,76,.045)!important;
+}
+html[data-theme="light"] .sidebar{
+  background:linear-gradient(180deg,#eef2f5 0%,#e9eef3 100%)!important;
+  border-right-color:rgba(37,50,70,.11)!important;
+}
+html[data-theme="light"] .v3-hero,
+html[data-theme="light"] .v3-calc-card,
+html[data-theme="light"] .v3-result-card,
+html[data-theme="light"] .fee-form-card,
+html[data-theme="light"] .fee-results-card,
+html[data-theme="light"] .fee-audit-panel,
+html[data-theme="light"] .profit-form-card,
+html[data-theme="light"] .profit-result-card,
+html[data-theme="light"] .profit-mode-card,
+html[data-theme="light"] .settings-card,
+html[data-theme="light"] .product-workspace-panel,
+html[data-theme="light"] .database-market-block,
+html[data-theme="light"] .seller-tools-grid button,
+html[data-theme="light"] .seller-workflow-summary,
+html[data-theme="light"] .seller-continue-row,
+html[data-theme="light"] .v3-summary-grid article,
+html[data-theme="light"] .v3-recent,
+html[data-theme="light"] .research-search-panel,
+html[data-theme="light"] .tiktok-fee-profile,
+html[data-theme="light"] .source-badge,
+html[data-theme="light"] .fee-live-badge,
+html[data-theme="light"] .profit-source-chip{
+  background:linear-gradient(180deg,#f5f7f9 0%,#eff3f6 100%)!important;
+  border-color:rgba(37,50,70,.10)!important;
+  box-shadow:0 14px 34px rgba(48,60,82,.055)!important;
+}
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea,
+html[data-theme="light"] .research-input-wrap{
+  background:#edf1f4!important;
+  color:#172033!important;
+  border-color:rgba(37,50,70,.14)!important;
+}
+html[data-theme="light"] input:focus,
+html[data-theme="light"] select:focus,
+html[data-theme="light"] textarea:focus{
+  background:#f2f5f7!important;
+}
+html[data-theme="light"] .sidebar-back-btn,
+html[data-theme="light"] .icon-btn,
+html[data-theme="light"] .ghost-btn,
+html[data-theme="light"] .secondary-btn{
+  background:#edf1f4!important;
+  border-color:rgba(37,50,70,.12)!important;
+}
+html[data-theme="light"] .theme-segment{
+  background:#e7ecf1!important;
+  border-color:rgba(37,50,70,.10)!important;
+}
+html[data-theme="light"] .theme-segment button.active{
+  background:#f3f6f8!important;
+  box-shadow:0 5px 14px rgba(48,60,82,.07)!important;
+}
+html[data-theme="light"] .sidebar-overlay{background:rgba(29,38,54,.24)!important}
+@media(prefers-contrast:more){
+  html[data-theme="light"]{--text:#101827;--muted:#556174;--line:rgba(25,36,54,.16);--line2:rgba(25,36,54,.22)}
+}
