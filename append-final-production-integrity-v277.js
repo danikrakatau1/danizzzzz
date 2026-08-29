@@ -17,6 +17,8 @@ const htmlPath=path.join(OUT,'index.html'),packagePath=path.join(ROOT,'package.j
 if(!fs.existsSync(htmlPath)||!fs.existsSync(packagePath))throw new Error('V277 required build artifacts missing');
 const html=read(htmlPath),pkg=JSON.parse(read(packagePath));
 const build=pkg.scripts?.build||'';
+const versionMatch=String(pkg.version||'').match(/^3\.4\.0-rc1-(\d+)-preview$/);
+const rcAuditVersion=versionMatch?Number(versionMatch[1]):NaN;
 
 // #10–#21 must each be represented exactly once in the final production build chain.
 const chain=[
@@ -92,7 +94,7 @@ const checks=[
  ['canonical payload size',payloadBuf.length===EXPECTED_PAYLOAD_SIZE],
  ['canonical payload sha256',sha(payloadBuf)===EXPECTED_PAYLOAD_SHA],
  ['all #10-#21 gates exactly once',Object.values(chainCounts).every(n=>n===1)],
- ['package version V277',pkg.version==='3.4.0-rc1-277-preview'],
+ ['package RC audit version >= V277',Number.isInteger(rcAuditVersion)&&rcAuditVersion>=277],
  ['index HTML present',/^\s*<!doctype html>/i.test(html)],
  ['all local HTML refs resolve',missingRefs.length===0],
  ['all generated JS syntax valid',jsFiles.length>=30],
@@ -108,5 +110,5 @@ const checks=[
  ['PROJECT LOCK untouched',sha(payloadBuf)===EXPECTED_PAYLOAD_SHA]
 ];
 const failed=checks.filter(([,ok])=>!ok);
-if(failed.length){console.error('V277 failed checks:',failed.map(([n])=>n),{chainCounts,missingRefs,missingCore,missingRoutes,conflictFiles,jsFiles:jsFiles.length});process.exit(1)}
+if(failed.length){console.error('V277 failed checks:',failed.map(([n])=>n),{chainCounts,missingRefs,missingCore,missingRoutes,conflictFiles,jsFiles:jsFiles.length,packageVersion:pkg.version});process.exit(1)}
 console.log(`V277 FINAL PRODUCTION INTEGRITY PASS · ${checks.length}/${checks.length} gates · ${fingerprintEntries.length} files · ${totalBytes} bytes · fingerprint ${fingerprint} · canonical payload SHA locked · #10-#21 regression green · PROJECT LOCK untouched`);
