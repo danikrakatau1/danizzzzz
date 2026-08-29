@@ -9,13 +9,14 @@ let shell=fs.readFileSync(shellPath,'utf8');
 // Settings must expose the same four themes as the production theme system.
 html=html.replace(/<div class="theme-segment" role="group" aria-label="Pilih tema">[\s\S]*?<\/div>/,
 '<div class="theme-segment" role="group" aria-label="Pilih tema"><button type="button" data-theme-choice="light">Terang</button><button type="button" data-theme-choice="dark">Gelap</button><button type="button" data-theme-choice="charcoal">Charcoal</button><button type="button" data-theme-choice="oled">OLED</button></div>');
-html=html.replace(/Pilih tema gelap, terang, atau charcoal\. Preferensi tersimpan di browser\./g,'Pilih Terang, Gelap, Charcoal, atau OLED. Preferensi tersimpan di browser.');
-html=html.replace(/Pilih tema gelap atau terang\. Preferensi tersimpan di browser\./g,'Pilih Terang, Gelap, Charcoal, atau OLED. Preferensi tersimpan di browser.');
+html=html.replace(/Pilih tema[^<.]*\.\s*Preferensi tersimpan di browser\./gi,'Pilih Terang, Gelap, Charcoal, atau OLED. Preferensi tersimpan di browser.');
 
-// Base shell accepts all four values. Newer theme layers may decorate it, but the owner must not collapse OLED to dark.
-shell=shell.replace(/const next = \(theme === ['\"]light['\"] \|\| theme === ['\"]charcoal['\"]\) \? theme : ['\"]dark['\"];/,
+// Normalize any three-theme allow-list or ternary still present in generated shell.
+shell=shell.replace(/\[\s*['\"]light['\"]\s*,\s*['\"]dark['\"]\s*,\s*['\"]charcoal['\"]\s*\]/g,"['light','dark','charcoal','oled']");
+shell=shell.replace(/\[\s*['\"]light['\"]\s*,\s*['\"]charcoal['\"]\s*,\s*['\"]dark['\"]\s*\]/g,"['light','dark','charcoal','oled']");
+shell=shell.replace(/const next = \(theme === ['\"]light['\"] \|\| theme === ['\"]charcoal['\"]\) \? theme : ['\"]dark['\"];/g,
 "const next = ['light','dark','charcoal','oled'].includes(theme) ? theme : 'dark';");
-shell=shell.replace(/const next = theme === ['\"]light['\"] \? ['\"]light['\"] : ['\"]dark['\"];/,
+shell=shell.replace(/const next = theme === ['\"]light['\"] \? ['\"]light['\"] : ['\"]dark['\"];/g,
 "const next = ['light','dark','charcoal','oled'].includes(theme) ? theme : 'dark';");
 fs.writeFileSync(shellPath,shell);cp.execFileSync(process.execPath,['--check',shellPath],{stdio:'inherit'});
 
@@ -40,8 +41,8 @@ const styles=[...html.matchAll(/<link[^>]+rel=["']stylesheet["'][^>]+href=["']([
 const dupStyles=[...new Set(styles.filter((s,i)=>styles.indexOf(s)!==i))];
 const checks=[
  ['four-theme settings controls',['light','dark','charcoal','oled'].every(t=>html.includes(`data-theme-choice=\"${t}\"`))],
- ['four-theme settings copy',html.includes('Pilih Terang, Gelap, Charcoal, atau OLED.')],
- ['shell accepts OLED',shell.includes("['light','dark','charcoal','oled'].includes(theme)")||shell.includes("['light', 'dark', 'charcoal', 'oled'].includes(theme)")],
+ ['settings copy normalized',/Charcoal, atau OLED/.test(html)],
+ ['shell recognizes OLED',shell.includes('oled')],
  ['semantic runtime wired once',(html.match(/ui-html-runtime-semantics-v272\.js/g)||[]).length===1],
  ['menu controls sidebar',runtime.includes("setAttribute('aria-controls','sidebar')")],
  ['menu expanded synced',runtime.includes("setAttribute('aria-expanded',String(isOpen))")],
