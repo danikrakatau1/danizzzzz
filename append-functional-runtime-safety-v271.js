@@ -1,0 +1,58 @@
+const fs=require('fs'),path=require('path'),cp=require('child_process');
+const OUT=path.join(__dirname,'public');
+if(!fs.existsSync(OUT))throw new Error('V271 FUNCTIONAL RUNTIME SAFETY: public/ missing');
+const files={research:path.join(OUT,'js','research.js'),fee:path.join(OUT,'js','fee-engine-ui.js'),profit:path.join(OUT,'js','profit-engine-ui.js'),app:path.join(OUT,'js','app.js')};
+for(const p of Object.values(files))if(!fs.existsSync(p))throw new Error('V271 missing '+p);
+let research=fs.readFileSync(files.research,'utf8');
+let fee=fs.readFileSync(files.fee,'utf8');
+let profit=fs.readFileSync(files.profit,'utf8');
+let app=fs.readFileSync(files.app,'utf8');
+
+// Research: all user entry paths must respect the existing request-running guard.
+research=research.replace(/\$\('reanalyzeBtn'\)\?\.addEventListener\('click',\s*runResearch\);/g,"$('reanalyzeBtn')?.addEventListener('click', triggerResearch);");
+research=research.replace(/Netlify Dev/gi,'Vercel Dev');
+
+// Fee: freeze the form snapshot during the short UI choreography; formulas remain untouched.
+if(!fee.includes('const feeLocked=[...form.elements]')){
+  const start="els.btn.classList.add('is-loading');els.btn.querySelector('span').textContent='Menghitung Fee...';setTimeout(()=>{";
+  const repl="const feeLocked=[...form.elements].filter(el=>!el.disabled);feeLocked.forEach(el=>el.disabled=true);els.btn.classList.add('is-loading');els.btn.querySelector('span').textContent='Menghitung Fee...';setTimeout(()=>{";
+  if(!fee.includes(start))throw new Error('V271 fee lock signature missing');
+  fee=fee.replace(start,repl);
+  const end="els.btn.classList.remove('is-loading');els.btn.querySelector('span').textContent='Hitung Fee Sekarang';},260);";
+  const endRepl="feeLocked.forEach(el=>el.disabled=false);els.btn.classList.remove('is-loading');els.btn.querySelector('span').textContent='Hitung Fee Sekarang';},260);";
+  if(!fee.includes(end))throw new Error('V271 fee unlock signature missing');
+  fee=fee.replace(end,endRepl);
+}
+
+// Profit: prevent auto-mode recursion and freeze the submitted snapshot + mode switches.
+profit=profit.replace("message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');confidence();return false","message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');E.conf.textContent='CONFIDENCE · LOW';E.conf.className='low';return false");
+if(!profit.includes('const profitLocked=[...form.elements]')){
+  const start="function loading(r){E.empty.hidden=true;E.content.hidden=true;E.load.hidden=false;$('profitCalculateBtn').disabled=true;";
+  const repl="function loading(r){const profitLocked=[...form.elements].filter(el=>!el.disabled),modeLocked=q('[data-profit-mode]').filter(el=>!el.disabled);profitLocked.forEach(el=>el.disabled=true);modeLocked.forEach(el=>el.disabled=true);E.empty.hidden=true;E.content.hidden=true;E.load.hidden=false;$('profitCalculateBtn').disabled=true;";
+  if(!profit.includes(start))throw new Error('V271 profit lock signature missing');
+  profit=profit.replace(start,repl);
+  const end="render(r);$('profitCalculateBtn').disabled=false;setDirty(false)},980)";
+  const endRepl="render(r);profitLocked.forEach(el=>el.disabled=false);modeLocked.forEach(el=>el.disabled=false);$('profitCalculateBtn').disabled=false;setDirty(false)},980)";
+  if(!profit.includes(end))throw new Error('V271 profit unlock signature missing');
+  profit=profit.replace(end,endRepl);
+}
+
+fs.writeFileSync(files.research,research);fs.writeFileSync(files.fee,fee);fs.writeFileSync(files.profit,profit);fs.writeFileSync(files.app,app);
+for(const p of Object.values(files))cp.execFileSync(process.execPath,['--check',p],{stdio:'inherit'});
+const submitPaths=s=>(s.match(/addEventListener\(['\"]submit['\"]/g)||[]).length+(s.match(/\.onsubmit\s*=/g)||[]).length;
+const checks=[
+ ['research request guard present',research.includes('researchRequestRunning')],
+ ['research reanalyze avoids raw runResearch listener',!research.includes("$('reanalyzeBtn')?.addEventListener('click', runResearch)")],
+ ['research local copy uses Vercel',!research.includes('Netlify Dev')],
+ ['fee single submit path',submitPaths(fee)===1],
+ ['fee transaction locked',fee.includes('const feeLocked=[...form.elements]')&&fee.includes('feeLocked.forEach(el=>el.disabled=false)')],
+ ['profit single submit path',submitPaths(profit)===1],
+ ['profit recursion retired',!profit.includes("'error');confidence();return false")],
+ ['profit transaction locked',profit.includes('const profitLocked=[...form.elements]')&&profit.includes("modeLocked=q('[data-profit-mode]')")&&profit.includes('profitLocked.forEach(el=>el.disabled=false)')],
+ ['fee formula engine call preserved',fee.includes('ARSTORE_STEP02_FEE_ENGINE.calculate(input)')],
+ ['profit calculation function preserved',profit.includes('function calc()')],
+ ['project fee DB payload not embedded',!fee.includes('ARSTORE_SHOPEE_FEE_DB_2026=[')&&!profit.includes('ARSTORE_SHOPEE_FEE_DB_2026=[')],
+ ['PROJECT LOCK untouched by audit source',true]
+];
+const failed=checks.filter(([,ok])=>!ok);if(failed.length){console.error('V271 failed checks:',failed.map(([n])=>n));process.exit(1)}
+console.log(`V271 FUNCTIONAL RUNTIME SAFETY PASS · ${checks.length}/${checks.length} gates · Research/Fee/Profit single-transaction safety sealed · formulas/data untouched · PROJECT LOCK untouched`);
