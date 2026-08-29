@@ -12,9 +12,16 @@ html=html.replace('</head>','<link rel="stylesheet" href="css/ui-sidebar-total-a
 fs.writeFileSync(htmlPath,html);
 const files={app:path.join(OUT,'js','app.js'),runtime34:path.join(OUT,'js','ui-runtime-v34.js'),final34:path.join(OUT,'js','ui-final-runtime-v34.js'),v261:path.join(OUT,'js','ui-motion-core-v261.js'),v264:path.join(OUT,'js','ui-ios-navigation-v264.js'),v265:path.join(OUT,'js','ui-accordion-audit-v265.js')};
 for(const p of Object.values(files))if(!fs.existsSync(p))throw new Error('V269 SIDEBAR TOTAL AUDIT missing '+p);
+
+// #14: native sidebar scrolling + final reveal runtime are the only active scroll/reveal owners.
+// Keep the legacy helper definition for traceability, but retire its initialization.
+let runtime34=fs.readFileSync(files.runtime34,'utf8');
+runtime34=runtime34.replace(/\n\s*wireSidebarScroll\(\);\s*\n/,'\n');
+fs.writeFileSync(files.runtime34,runtime34);
+
 for(const p of Object.values(files))cp.execFileSync(process.execPath,['--check',p],{stdio:'inherit'});
 const read=p=>fs.readFileSync(p,'utf8');
-const app=read(files.app),runtime34=read(files.runtime34),final34=read(files.final34),v261=read(files.v261),v264=read(files.v264),v265=read(files.v265),css=read(cssDst);
+const app=read(files.app);runtime34=read(files.runtime34);const final34=read(files.final34),v261=read(files.v261),v264=read(files.v264),v265=read(files.v265),css=read(cssDst);
 const count=(s,re)=>(s.match(re)||[]).length;
 const checks=[
  ['sidebar ids exist',/id=["']sidebar["']/.test(html)&&/id=["']sidebarOverlay["']/.test(html)&&/id=["']mobileMenuBtn["']/.test(html)],
@@ -40,4 +47,4 @@ const checks=[
 ];
 const failed=checks.filter(([,ok])=>!ok);
 if(failed.length){console.error('V269 failed checks:',failed.map(([n])=>n));process.exit(1)}
-console.log(`V269 SIDEBAR TOTAL AUDIT PASS · ${checks.length}/${checks.length} gates · single mobile scroll owner · safe-area/focus/ellipsis sealed · PROJECT LOCK untouched`);
+console.log(`V269 SIDEBAR TOTAL AUDIT PASS · ${checks.length}/${checks.length} gates · legacy wheel owner retired · single mobile scroll owner · safe-area/focus/ellipsis sealed · PROJECT LOCK untouched`);
