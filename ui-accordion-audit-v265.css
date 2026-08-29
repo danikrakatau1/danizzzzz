@@ -1,0 +1,116 @@
+/* ===== V3.4 #10 — ACCORDION TOTAL AUDIT · V265 =====
+   Navigation accordion hardening only. No fee/formula/database/project-lock logic. */
+:root{
+  --accordion-motion:290ms;
+  --accordion-fade:180ms;
+  --accordion-ease:cubic-bezier(.22,1,.36,1);
+}
+
+/* One motion authority for every sidebar accordion. */
+.sidebar-nav .nav-accordion-panel{
+  display:grid!important;
+  grid-template-rows:0fr!important;
+  min-height:0!important;
+  max-height:none!important;
+  height:auto!important;
+  overflow:hidden!important;
+  opacity:.58;
+  visibility:visible!important;
+  pointer-events:none;
+  contain:layout style;
+  transition:
+    grid-template-rows var(--accordion-motion) var(--accordion-ease),
+    opacity var(--accordion-fade) ease!important;
+}
+.sidebar-nav .nav-accordion-panel>.nav-accordion-inner{
+  min-height:0!important;
+  overflow:hidden!important;
+  transform:translate3d(0,-4px,0);
+  opacity:.82;
+  transition:
+    transform var(--accordion-motion) var(--accordion-ease),
+    opacity var(--accordion-fade) ease!important;
+}
+.sidebar-nav .nav-group.is-open>.nav-accordion-panel{
+  grid-template-rows:1fr!important;
+  opacity:1;
+  pointer-events:auto;
+}
+.sidebar-nav .nav-group.is-open>.nav-accordion-panel>.nav-accordion-inner{
+  transform:none;
+  opacity:1;
+}
+
+/* Chevron and parent state are always visually synchronized with aria-expanded. */
+.sidebar-nav [data-nav-toggle] .nav-chevron{
+  transform-origin:50% 50%;
+  transition:
+    transform 240ms var(--accordion-ease),
+    color 180ms ease,
+    opacity 180ms ease!important;
+}
+.sidebar-nav [data-nav-toggle][aria-expanded="true"] .nav-chevron{transform:rotate(180deg)!important}
+.sidebar-nav [data-nav-toggle][aria-expanded="false"] .nav-chevron{transform:rotate(0deg)!important}
+
+/* Premium but quiet parent feedback across themes. */
+.sidebar-nav [data-nav-toggle]{
+  position:relative;
+  isolation:isolate;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease,
+    transform 140ms ease!important;
+}
+.sidebar-nav [data-nav-toggle][aria-expanded="true"]{
+  background:rgba(139,92,246,.075)!important;
+  color:var(--text,#f5f7fb)!important;
+}
+html[data-theme="light"] .sidebar-nav [data-nav-toggle][aria-expanded="true"]{
+  background:#f1edff!important;
+  color:#2f245f!important;
+}
+html[data-theme="charcoal"] .sidebar-nav [data-nav-toggle][aria-expanded="true"]{background:rgba(139,92,246,.08)!important}
+html[data-theme="oled"] .sidebar-nav [data-nav-toggle][aria-expanded="true"]{background:rgba(139,92,246,.09)!important}
+
+/* Keep hidden descendants out of accidental pointer/touch interaction. */
+.sidebar-nav .nav-accordion-panel[aria-hidden="true"]{pointer-events:none!important}
+.sidebar-nav .nav-accordion-panel[aria-hidden="false"]{pointer-events:auto}
+
+/* Prevent transition-state visual leaks and nested clipping glitches. */
+.sidebar-nav .nav-group,
+.sidebar-nav .nav-accordion-inner,
+.sidebar-nav .nav-subitem,
+.sidebar-nav .nav-item{min-width:0}
+.sidebar-nav .nav-accordion-inner{transform-origin:top center}
+.sidebar-nav .nav-group.is-accordion-transitioning{z-index:1}
+.sidebar-nav .nav-group.is-accordion-transitioning>[data-nav-toggle]{pointer-events:none}
+
+/* Focus remains clear without creating a bright ring in dark/OLED. */
+.sidebar-nav [data-nav-toggle]:focus-visible{
+  outline:2px solid rgba(167,139,250,.92)!important;
+  outline-offset:2px!important;
+  box-shadow:0 0 0 4px rgba(139,92,246,.10)!important;
+}
+html[data-theme="light"] .sidebar-nav [data-nav-toggle]:focus-visible{
+  outline-color:#7257dc!important;
+  box-shadow:0 0 0 4px rgba(114,87,220,.10)!important;
+}
+
+/* Touch targets stay usable on Android/iPhone without inflating desktop density. */
+@media(max-width:900px),(pointer:coarse){
+  .sidebar-nav [data-nav-toggle]{min-height:48px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}
+  .sidebar-nav .nav-accordion-panel{--accordion-motion:270ms;--accordion-fade:160ms}
+}
+
+/* A11y: reduced motion means immediate deterministic state, not half-open animation. */
+@media(prefers-reduced-motion:reduce){
+  .sidebar-nav .nav-accordion-panel,
+  .sidebar-nav .nav-accordion-panel>.nav-accordion-inner,
+  .sidebar-nav [data-nav-toggle],
+  .sidebar-nav [data-nav-toggle] .nav-chevron{
+    transition:none!important;
+    animation:none!important;
+  }
+}
