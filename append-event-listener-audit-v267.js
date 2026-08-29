@@ -40,13 +40,15 @@ const count=(s,re)=>(s.match(re)||[]).length;
 const submitPaths=s=>count(s,/addEventListener\(['\"]submit['\"]/g)+count(s,/\.onsubmit\s*=/g);
 const scriptSrcs=[...html.matchAll(/<script[^>]+src=["']([^"']+)["'][^>]*>/gi)].map(m=>m[1].split('?')[0]);
 const duplicateScripts=[...new Set(scriptSrcs.filter((src,i,a)=>a.indexOf(src)!==i))];
+const baseOverlayOwners=count(app,/overlay\?\.addEventListener\(\s*['\"]click['\"]\s*,\s*closeSidebar\s*\)/g);
+const baseHamburgerOwners=count(app,/mobileMenuBtn\?\.addEventListener\(\s*['\"]click['\"]/g);
 
 const checks=[
   ['V259 legacy runtime unwired',!html.includes('ui-ios-sidebar-navfix-v259.js')],
   ['V259 presentation CSS retained',html.includes('ui-ios-sidebar-navfix-v259.css')],
   ['no duplicate script src',duplicateScripts.length===0],
-  ['base overlay owner singular',count(app,/overlay\?\.addEventListener\('click', closeSidebar\)/g)===1],
-  ['base hamburger owner singular',count(app,/mobileMenuBtn\?\.addEventListener\('click'/g)===1],
+  ['base overlay owner singular',baseOverlayOwners===1],
+  ['base hamburger owner singular',baseHamburgerOwners===1],
   ['V261 iOS gesture blocked by V264',v261.includes("if(!(window.__ARSTORE_V264_NAV_AUTHORITY&&platform==='ios'))setupDrawerGesture();")],
   ['V261 duplicate overlay click retired',!v261.includes("o.addEventListener('click',closeDrawer")],
   ['V261 duplicate leaf click retired',!v261.includes("#sidebar [data-page],#sidebar [data-go]')")],
@@ -70,6 +72,7 @@ const checks=[
 const failed=checks.filter(([,ok])=>!ok);
 if(failed.length){
   console.error('V267 failed checks:',failed.map(([name])=>name));
+  console.error('V267 owner counts:',{baseOverlayOwners,baseHamburgerOwners});
   if(duplicateScripts.length)console.error('Duplicate scripts:',duplicateScripts);
   process.exit(1);
 }
