@@ -13,7 +13,7 @@ const checks=[
  ['accordion expanded sync',accordion.includes('aria-expanded')],
  ['accordion hidden sync',accordion.includes('aria-hidden')],
  ['accordion inert closed panels',accordion.includes('inert')],
- ['accordion Escape keyboard handling',accordion.includes("e.key==='Escape'")||accordion.includes("event.key === 'Escape'")||accordion.includes("event.key==='Escape'")],
+ ['accordion Escape keyboard handling',accordion.includes("event.key!=='Escape'")&&accordion.includes("toggle?.focus({preventScroll:true})")],
  ['theme capsule keyboard Enter Space',gear.includes("e.key==='Enter'||e.key===' '")],
  ['theme capsule arrow keys',gear.includes("ArrowRight")&&gear.includes("ArrowLeft")],
  ['theme capsule Home End',gear.includes("e.key==='Home'")&&gear.includes("e.key==='End'")],
