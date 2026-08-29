@@ -8,23 +8,19 @@ let fee=fs.readFileSync(files.fee,'utf8');
 let profit=fs.readFileSync(files.profit,'utf8');
 let app=fs.readFileSync(files.app,'utf8');
 
-// Research: all user entry paths must respect the existing request-running guard.
 research=research.replace(/\$\('reanalyzeBtn'\)\?\.addEventListener\('click',\s*runResearch\);/g,"$('reanalyzeBtn')?.addEventListener('click', triggerResearch);");
 research=research.replace(/Netlify Dev/gi,'Vercel Dev');
 
-// Fee: freeze the form snapshot during the short UI choreography; formulas remain untouched.
+// Freeze Fee UI controls at the moment calculation choreography starts.
 if(!fee.includes('const feeLocked=[...form.elements]')){
-  const start="els.btn.classList.add('is-loading');els.btn.querySelector('span').textContent='Menghitung Fee...';setTimeout(()=>{";
-  const repl="const feeLocked=[...form.elements].filter(el=>!el.disabled);feeLocked.forEach(el=>el.disabled=true);els.btn.classList.add('is-loading');els.btn.querySelector('span').textContent='Menghitung Fee...';setTimeout(()=>{";
-  if(!fee.includes(start))throw new Error('V271 fee lock signature missing');
-  fee=fee.replace(start,repl);
-  const end="els.btn.classList.remove('is-loading');els.btn.querySelector('span').textContent='Hitung Fee Sekarang';},260);";
-  const endRepl="feeLocked.forEach(el=>el.disabled=false);els.btn.classList.remove('is-loading');els.btn.querySelector('span').textContent='Hitung Fee Sekarang';},260);";
-  if(!fee.includes(end))throw new Error('V271 fee unlock signature missing');
-  fee=fee.replace(end,endRepl);
+  const lockPoint=/els\.btn\.classList\.add\(['\"]is-loading['\"]\);/;
+  if(!lockPoint.test(fee))throw new Error('V271 fee lock point missing');
+  fee=fee.replace(lockPoint,"const feeLocked=[...form.elements].filter(el=>!el.disabled);feeLocked.forEach(el=>el.disabled=true);els.btn.classList.add('is-loading');");
+  const unlockPoint=/els\.btn\.classList\.remove\(['\"]is-loading['\"]\);/;
+  if(!unlockPoint.test(fee))throw new Error('V271 fee unlock point missing');
+  fee=fee.replace(unlockPoint,"feeLocked.forEach(el=>el.disabled=false);els.btn.classList.remove('is-loading');");
 }
 
-// Profit: prevent auto-mode recursion and freeze the submitted snapshot + mode switches.
 profit=profit.replace("message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');confidence();return false","message('Belum ada hasil Fee Engine yang presisi. Selesaikan Step 02 terlebih dahulu.','error');E.conf.textContent='CONFIDENCE · LOW';E.conf.className='low';return false");
 if(!profit.includes('const profitLocked=[...form.elements]')){
   const start="function loading(r){E.empty.hidden=true;E.content.hidden=true;E.load.hidden=false;$('profitCalculateBtn').disabled=true;";
