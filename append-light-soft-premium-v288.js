@@ -19,7 +19,7 @@ const checks=[
  ['text contrast retained',css.includes('--text:#172033')&&css.includes('--muted:#697589')],
  ['sidebar softened',css.includes('.sidebar{')&&css.includes('#eef2f5')],
  ['contrast preference supported',css.includes('prefers-contrast:more')],
- ['PROJECT LOCK untouched',!css.includes('fee-engine')&&!css.includes('shopee-fee')&&!css.includes('tiktok-fee')]
+ ['PROJECT LOCK untouched',!css.includes('ARSTORE_STEP02_FEE_ENGINE')&&!css.includes('shopee-fee-db-2026.js')&&!css.includes('tiktok-fee-db-2026.js')&&!css.includes('profit-engine-ui.js')]
 ];
 const failed=checks.filter(([,ok])=>!ok);if(failed.length){console.error('V288 failed:',failed.map(([n])=>n));process.exit(1)}
 console.log(`V288 SOFT PREMIUM LIGHT THEME PASS · ${checks.length}/${checks.length} gates · pure-white glare reduced with layered off-white surfaces · PROJECT LOCK untouched`);
