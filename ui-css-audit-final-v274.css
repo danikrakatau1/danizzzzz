@@ -1,0 +1,50 @@
+/* ARSTORE V3.4 #19 — CSS FINAL AUDIT · V274
+   Presentation/performance only. PROJECT LOCK: no engine/data/formula changes. */
+
+/* Permanent compositor hints on navigation chrome are unnecessary once idle. */
+.sidebar,
+.sidebar-overlay,
+.sidebar-nav,
+.sidebar-nav .nav-accordion-panel,
+.sidebar-nav .nav-accordion-inner,
+.sidebar-nav .nav-chevron{
+  will-change:auto!important;
+}
+
+/* Preserve native sidebar scrolling established by V269. */
+.sidebar-nav{
+  scroll-behavior:auto!important;
+  overscroll-behavior-y:contain!important;
+}
+
+/* On iOS, animate overlay visibility/opacity only; never animate full-screen blur. */
+html[data-ar-platform="ios"] #sidebarOverlay,
+html[data-ar-platform="ios"] .sidebar-overlay{
+  transition-property:opacity,visibility!important;
+}
+html[data-ar-platform="ios"] #sidebarOverlay:not(.show),
+html[data-ar-platform="ios"] .sidebar-overlay:not(.show){
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Keep focus feedback deterministic across all themes. */
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline-offset:2px;
+}
+
+/* Reduced motion is a final hard stop for navigation/theme choreography. */
+@media(prefers-reduced-motion:reduce){
+  .sidebar,
+  .sidebar-overlay,
+  .sidebar-nav,
+  .sidebar-nav .nav-accordion-panel,
+  .sidebar-nav .nav-accordion-inner,
+  .sidebar-nav .nav-chevron{
+    transition-duration:0.01ms!important;
+    animation-duration:0.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    will-change:auto!important;
+  }
+}
